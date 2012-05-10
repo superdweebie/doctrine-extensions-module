@@ -1,0 +1,3 @@
+[submodule "vendor/SdsDoctrineExtensions"]
+	path = vendor/SdsDoctrineExtensions
+	url = https://github.com/superdweebie/SdsDoctrineExtensions
