@@ -1,6 +1,36 @@
 <?php
 return array(
     'di' => array(
+        'instance' => array(
+
+            'mongo_evm' => array(
+                'injections' => array(
+                    'setSubscriber' => array(
+                        array('subscriber' => 'SdsDoctrineExtensions\Listener\ActiveUser')
+                    )
+                ),
+            ),
+                                  
+            'SdsDoctrineExtensions\Listener\ActiveUser' => array(
+              'parameters' => array(
+                  'activeUser' => 'active_user',
+              ),  
+            ),
+            
+            'mongo_driver_chain' => array(
+                'parameters' => array(
+                    'drivers' => array(
+                        'sdsDoctrineExtensionsModule_annotation_driver' => array(
+                            'class'     => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
+                            'namespace' => 'SdsDoctrineExtensions\Model',
+                            'paths'     => array(
+                                'vendor/SdsDoctrineExtensionsModule/vendor/SdsDoctrineExtensions/lib/SdsDoctrineExtensions/Model'
+                            ),                             
+                         ),                        
+                     ),
+                ),
+            ), 
+        ),        
         'definition' => array(
             'class' => array(
                 'SdsDoctrineExtensionsModule\Factory\Find' => array(
