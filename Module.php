@@ -4,13 +4,16 @@ namespace SdsDoctrineExtensionsModule;
 
 use Zend\Module\Manager,
     Zend\Module\Consumer\AutoloaderProvider,
-    Doctrine\Common\Annotations\AnnotationRegistry;
+    SdsDoctrineExtensions\Common\AnnotationRegistrator,
+    SdsDoctrineExtensions\Serializer\SerializerService;
 
 class Module implements AutoloaderProvider
 {
     public function init(Manager $moduleManager)
-    {
-        $moduleManager->events()->attach('loadModules.post', array($this, 'modulesLoaded'));           
+    {   
+        $events = $moduleManager->events();
+        $sharedEvents = $events->getSharedManager();
+        $sharedEvents->attach('bootstrap', 'bootstrap', array($this, 'initialize'));             
     }
       
     public function getAutoloaderConfig()
@@ -22,14 +25,14 @@ class Module implements AutoloaderProvider
     {
         return include __DIR__ . '/config/module.config.php';
     }
-     
-    public function modulesLoaded($e)
-    {
-        $annotationReflection = new \ReflectionClass('SdsDoctrineExtensions\ODM\MongoDB\Mapping\Annotation\Audited');
-        $path = dirname($annotationReflection->getFileName());        
-        AnnotationRegistry::registerAutoloadNamespace(
-            'SdsDoctrineExtensions\ODM\MongoDB\Mapping\Annotation', 
-            $path
-        );           
-    }    
+        
+    public function initialize($e){
+        $annotationRegistrator = new AnnotationRegistrator;
+        $annotationRegistrator->registerAll(); 
+        
+        $app = $e->getParam('application');        
+        $locator = $app->getLocator();        
+        $serializerService = SerializerService::getInstance();
+        $serializerService->setDocumentManager($locator->get('mongo_dm'));                  
+    }
 }
