@@ -37,6 +37,8 @@ class Module implements AutoloaderProvider
         $serializerService = SerializerService::getInstance();
         $serializerService->setDocumentManager($dm);                  
         
-        $dm->getFilters()->enable("readAccessControl");
+        $activeUser = $locator->get('active_user');
+        $filter = $dm->getFilters()->enable('readAccessControl');        
+        $filter->setParameter('activeUser', $activeUser);
     }
 }
