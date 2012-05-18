@@ -46,7 +46,13 @@ return array(
                   'driverChain' => 'mongo_driver_chain',                  
               ),  
             ), 
-                        
+
+            'SdsDoctrineExtensions\AccessControl\Filter\ReadAccessControl' => array(
+              'parameters' => array(
+                  'activeUser' => 'active_user',                  
+              ),  
+            ),             
+            
             'mongo_driver_chain' => array(
                 'parameters' => array(
                     'drivers' => array(

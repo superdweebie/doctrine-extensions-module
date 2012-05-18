@@ -31,8 +31,12 @@ class Module implements AutoloaderProvider
         $annotationRegistrator->registerAll(); 
         
         $app = $e->getParam('application');        
-        $locator = $app->getLocator();        
+        $locator = $app->getLocator();
+        $dm = $locator->get('mongo_dm');
+        
         $serializerService = SerializerService::getInstance();
-        $serializerService->setDocumentManager($locator->get('mongo_dm'));                  
+        $serializerService->setDocumentManager($dm);                  
+        
+        $dm->getFilters()->enable("readAccessControl");
     }
 }
