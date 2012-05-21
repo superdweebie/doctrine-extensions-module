@@ -11,7 +11,8 @@ return array(
                         array('subscriber' => 'SdsDoctrineExtensions\Audit\Listener\Audit'),
                         array('subscriber' => 'SdsDoctrineExtensions\Readonly\Listener\Readonly'),                    
                         array('subscriber' => 'SdsDoctrineExtensions\SoftDelete\Listener\SoftDelete'),                          
-                        array('subscriber' => 'SdsDoctrineExtensions\Serializer\Listener\Serializer'),                          
+                        array('subscriber' => 'SdsDoctrineExtensions\Serializer\Listener\Serializer'), 
+                        array('subscriber' => 'SdsDoctrineExtensions\Stamp\Listener\Stamp'),                         
                     )
                 ),
             ),
@@ -52,6 +53,12 @@ return array(
                   'activeUser' => 'active_user',                  
               ),  
             ),             
+            
+            'SdsDoctrineExtensions\Stamp\Listener\Stamp' => array(
+              'parameters' => array(
+                  'activeUser' => 'active_user',
+              ),  
+            ),
             
             'mongo_driver_chain' => array(
                 'parameters' => array(
