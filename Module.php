@@ -14,6 +14,7 @@ class Module
         $sharedEvents->attach('DoctrineMongoODMModule', 'loadDrivers', array($this, 'loadMongoODMDrivers'));      
         $sharedEvents->attach('DoctrineMongoODMModule', 'loadFilters', array($this, 'loadMongoODMFilters'));           
         $sharedEvents->attach('DoctrineMongoODMModule', 'loadSubscribers', array($this, 'loadMongoODMSubscribers'));         
+        $sharedEvents->attach('DoctrineMongoODMModule', 'loadAnnotations', array($this, 'loadMongoODMAnnotations'));         
     }
     
     public function getConfig()
@@ -21,13 +22,10 @@ class Module
         return include __DIR__ . '/config/module.config.php';
     }
 
-    public function onBootstrap(Event $e){
-        $annotationRegistrator = new AnnotationRegistrator;
-        $annotationRegistrator->registerAll(); 
-        
+    public function onBootstrap(Event $e){       
         $app = $e->getParam('application');        
         $sm = $app->getServiceManager();
-        $dm = $sm->get('Doctrine\ODM\MongoDB\DocumentManager');
+        $dm = $sm->get('mongo_dm');
         
         $serializerService = SerializerService::getInstance();
         $serializerService->setDocumentManager($dm);                  
@@ -62,6 +60,11 @@ class Module
             $subscribers[] = $sl->get($subscriberClass);
         }
         return $subscribers;
+    }
+
+    public function loadMongoODMAnnotations($e){
+        $serviceLocator = $e->getTarget();
+        return $serviceLocator->get('Configuration')->sds_doctrine_extensions_config->annnotations->toArray();
     }
     
     public function getServiceConfiguration()

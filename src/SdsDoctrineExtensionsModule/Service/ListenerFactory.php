@@ -11,7 +11,7 @@ class ListenerFactory implements AbstractFactoryInterface
     protected $cNames;
     
     protected $activeUserTrait = 'SdsDoctrineExtensions\ActiveUser\Behaviour\ActiveUser';
-    protected $readerTrait = 'SdsDoctrineExtensions\Common\Behaviour\Reader';
+    protected $readerTrait = 'SdsDoctrineExtensions\Common\Behaviour\AnnotationReader';
     
     public function canCreateServiceWithName($name) {
     }

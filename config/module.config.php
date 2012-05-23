@@ -30,6 +30,11 @@ return array(
             'SdsDoctrineExtensions\SoftDelete\Listener\SoftDelete',                          
             'SdsDoctrineExtensions\Serializer\Listener\Serializer', 
             'SdsDoctrineExtensions\Stamp\Listener\Stamp',             
+        ),
+        'annnotations' => array(
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Audit\Mapping\Annotation\Audit.php',
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Readonly\Mapping\Annotation\Readonly.php',
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Serializer\Mapping\Annotation\DoNotserialize.php'
         )
     ),    
 );
