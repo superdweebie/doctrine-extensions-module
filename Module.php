@@ -9,8 +9,8 @@ use SdsDoctrineExtensions\Serializer\SerializerService;
 
 class Module
 {
-    public function init(ModuleManager $mm){
-        $sharedEvents = $mm->events()->getSharedManager();
+    public function init(ModuleManager $moduleManager){
+        $sharedEvents = $moduleManager->events()->getSharedManager();
         $sharedEvents->attach('DoctrineMongoODMModule', 'loadDrivers', array($this, 'loadMongoODMDrivers'));      
         $sharedEvents->attach('DoctrineMongoODMModule', 'loadFilters', array($this, 'loadMongoODMFilters'));           
         $sharedEvents->attach('DoctrineMongoODMModule', 'loadSubscribers', array($this, 'loadMongoODMSubscribers'));         
@@ -38,7 +38,7 @@ class Module
     public function loadMongoODMDrivers($e){
         $serviceLocator = $e->getTarget();
         $reader = $serviceLocator->get('Doctrine\Common\Annotations\CachedReader');
-        $config = $serviceLocator->get('Configuration')->sds_doctrine_extensions_config->drivers->toArray();
+        $config = $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['drivers'];
         $return = array();
         
         foreach($config as $params){
@@ -48,23 +48,23 @@ class Module
     }
     
     public function loadMongoODMFilters($e){
-        $sl = $e->getTarget();
-        return $sl->get('Configuration')->sds_doctrine_extensions_config->filters->toArray();       
+        $serviceLocator = $e->getTarget();
+        return $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['filters'];       
     }
     
     public function loadMongoODMSubscribers($e){
-        $sl = $e->getTarget();
-        $subscriberClasses = $sl->get('Configuration')->sds_doctrine_extensions_config->subscribers->toArray();
+        $serviceLocator = $e->getTarget();
+        $subscriberClasses = $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['subscribers'];
         $subscribers = array();
         foreach($subscriberClasses as $subscriberClass){
-            $subscribers[] = $sl->get($subscriberClass);
+            $subscribers[] = $serviceLocator->get($subscriberClass);
         }
         return $subscribers;
     }
 
     public function loadMongoODMAnnotations($e){
         $serviceLocator = $e->getTarget();
-        return $serviceLocator->get('Configuration')->sds_doctrine_extensions_config->annnotations->toArray();
+        return $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['annnotations'];
     }
     
     public function getServiceConfiguration()
