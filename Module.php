@@ -38,7 +38,7 @@ class Module
     public function loadMongoODMDrivers($e){
         $serviceLocator = $e->getTarget();
         $reader = $serviceLocator->get('Doctrine\Common\Annotations\CachedReader');
-        $config = $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['drivers'];
+        $config = $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['drivers'];
         $return = array();
         
         foreach($config as $params){
@@ -49,12 +49,12 @@ class Module
     
     public function loadMongoODMFilters($e){
         $serviceLocator = $e->getTarget();
-        return $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['filters'];       
+        return $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['filters'];       
     }
     
     public function loadMongoODMSubscribers($e){
         $serviceLocator = $e->getTarget();
-        $subscriberClasses = $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['subscribers'];
+        $subscriberClasses = $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['subscribers'];
         $subscribers = array();
         foreach($subscriberClasses as $subscriberClass){
             $subscribers[] = $serviceLocator->get($subscriberClass);
@@ -64,7 +64,7 @@ class Module
 
     public function loadMongoODMAnnotations($e){
         $serviceLocator = $e->getTarget();
-        return $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['annnotations'];
+        return $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['annnotations'];
     }
     
     public function getServiceConfiguration()

@@ -1,7 +1,7 @@
 <?php
 return array(
-    'sds_doctrine_extensions_config' => array(
-        'active_user' => 'active_user',
+    'sdsDoctrineExtensions' => array(
+        'activeUser' => 'activeUser',
         'reader' => 'Doctrine\Common\Annotations\CachedReader',
         'drivers' => array(
             array(
@@ -30,11 +30,15 @@ return array(
             'SdsDoctrineExtensions\SoftDelete\Listener\SoftDelete',                          
             'SdsDoctrineExtensions\Serializer\Listener\Serializer', 
             'SdsDoctrineExtensions\Stamp\Listener\Stamp',             
+            'SdsDoctrineExtensions\Metadata\Listener\Metadata',             
         ),
         'annnotations' => array(
             'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Audit\Mapping\Annotation\Audit.php',
             'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Readonly\Mapping\Annotation\Readonly.php',
-            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Serializer\Mapping\Annotation\DoNotserialize.php'
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Serializer\Mapping\Annotation\DoNotserialize.php',
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Metadata\Mapping\Annotation\Label.php',     
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Metadata\Mapping\Annotation\Width.php',  
+            'vendor\superdweebie\SdsDoctrineExtensions\lib\SdsDoctrineExtensions\Metadata\Mapping\Annotation\Hidden.php',     
         )
     ),    
 );

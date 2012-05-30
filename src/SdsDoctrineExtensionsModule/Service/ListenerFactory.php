@@ -19,10 +19,10 @@ class ListenerFactory implements AbstractFactoryInterface
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name) {
         $class = $this->checkName($serviceLocator, $name);  
         if($class){
-            $config = $serviceLocator->get('Configuration')['sds_doctrine_extensions_config'];          
+            $config = $serviceLocator->get('Configuration')['sdsDoctrineExtensions'];          
             $instance = new $class();
             if(Utils::checkForTrait($instance, $this->activeUserTrait)){
-                $instance->setActiveUser($serviceLocator->get($config['active_user']));
+                $instance->setActiveUser($serviceLocator->get($config['activeUser']));
             }            
             if(Utils::checkForTrait($instance, $this->readerTrait)){
                 $instance->setReader($serviceLocator->get($config['reader']));
@@ -34,7 +34,7 @@ class ListenerFactory implements AbstractFactoryInterface
     protected function checkName(ServiceLocatorInterface $serviceLocator, $name){
         if(!$this->cNames){
             $this->cNames = array();
-            $subscriberClasses = $serviceLocator->get('Configuration')['sds_doctrine_extensions_config']['subscribers']; 
+            $subscriberClasses = $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['subscribers']; 
             foreach($subscriberClasses as $subscriberClass){
                 $this->cNames[$this->canonicalizeName($subscriberClass)] = $subscriberClass;
             }
