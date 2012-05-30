@@ -4,7 +4,8 @@ namespace SdsDoctrineExtensionsModule\Service;
 
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use SdsDoctrineExtensions\Common\Utils;
+use SdsCommon\User\ActiveUserInterface;
+use SdsDoctrineExtensions\Common\AnnotationReaderInterface;
 
 class ListenerFactory implements AbstractFactoryInterface
 {
@@ -21,10 +22,10 @@ class ListenerFactory implements AbstractFactoryInterface
         if($class){
             $config = $serviceLocator->get('Configuration')['sdsDoctrineExtensions'];          
             $instance = new $class();
-            if(Utils::checkForTrait($instance, $this->activeUserTrait)){
+            if($instance instanceof ActiveUserInterface){
                 $instance->setActiveUser($serviceLocator->get($config['activeUser']));
             }            
-            if(Utils::checkForTrait($instance, $this->readerTrait)){
+            if($instance instanceof AnnotationReaderInterface){
                 $instance->setReader($serviceLocator->get($config['reader']));
             }              
             return $instance;
