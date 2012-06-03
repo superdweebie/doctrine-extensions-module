@@ -4,23 +4,32 @@ namespace SdsDoctrineExtensionsModule\Service;
 
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use SdsCommon\User\ActiveUserInterface;
+use SdsCommon\ActiveUser\ActiveUserInterface;
 use SdsDoctrineExtensions\Common\AnnotationReaderInterface;
 
 class ListenerFactory implements AbstractFactoryInterface
 {
     protected $cNames;
-    
-    protected $activeUserTrait = 'SdsDoctrineExtensions\ActiveUser\Behaviour\ActiveUser';
-    protected $readerTrait = 'SdsDoctrineExtensions\Common\Behaviour\AnnotationReader';
+    protected $serviceLocator;
+    protected $config;
     
     public function canCreateServiceWithName($name) {
     }
     
+    protected function getConfig(){
+        if(!isset($this->config)){
+            $config = $this->serviceLocator->get('Configuration');
+            $this->config = $config['sdsDoctrineExtensions'];             
+        }
+        return $this->config;
+    }
+    
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name) {
-        $class = $this->checkName($serviceLocator, $name);  
+        $this->serviceLocator = $serviceLocator;
+        
+        $class = $this->checkName((string)$name);  
         if($class){
-            $config = $serviceLocator->get('Configuration')['sdsDoctrineExtensions'];          
+            $config = $this->getConfig();        
             $instance = new $class();
             if($instance instanceof ActiveUserInterface){
                 $instance->setActiveUser($serviceLocator->get($config['activeUser']));
@@ -32,11 +41,11 @@ class ListenerFactory implements AbstractFactoryInterface
         }        
     } 
 
-    protected function checkName(ServiceLocatorInterface $serviceLocator, $name){
+    protected function checkName($name){
         if(!$this->cNames){
-            $this->cNames = array();
-            $subscriberClasses = $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['subscribers']; 
-            foreach($subscriberClasses as $subscriberClass){
+            $this->cNames = array();            
+            $config = $this->getConfig();
+            foreach($config['subscribers'] as $subscriberClass){
                 $this->cNames[$this->canonicalizeName($subscriberClass)] = $subscriberClass;
             }
         }
