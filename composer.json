@@ -15,16 +15,13 @@
     ],
     "require": {
         "php": ">=5.4",
-        "superdweebie/SdsDoctrineExtensions": "dev-master",
-        "ocramius/OcraComposer": "dev-master"
+        "superdweebie/SdsDoctrineExtensions": "dev-master"
     },
 
     "autoload": {
         "psr-0": {
-            "SdsDoctrineExtensionsModule": "src/"
-        },
-        "classmap": [
-            "./"
-        ]
+            "SdsDoctrineExtensionsModule": "src/",
+            "SdsDoctrineExtensionsModuleTest": "tests/"            
+        }
     }
 }
