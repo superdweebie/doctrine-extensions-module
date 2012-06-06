@@ -24,14 +24,14 @@ class Module
 
     public function onBootstrap(Event $e){       
         $app = $e->getParam('application');        
-        $sm = $app->getServiceManager();
-        $dm = $sm->get('mongo_dm');
+        $serviceManager = $app->getServiceManager();
+        $documentManager = $serviceManager->get('mongo_dm');
         
         $serializerService = SerializerService::getInstance();
-        $serializerService->setDocumentManager($dm);                  
+        $serializerService->setDocumentManager($documentManager);                  
         
-        $activeUser = $sm->get('active_user');
-        $filter = $dm->getFilters()->enable('readAccessControl');        
+        $activeUser = $serviceManager->get('active_user');
+        $filter = $documentManager->getFilters()->enable('readAccessControl');        
         $filter->setParameter('activeUser', $activeUser);
     }
     
