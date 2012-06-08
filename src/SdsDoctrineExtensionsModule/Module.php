@@ -4,18 +4,45 @@ namespace SdsDoctrineExtensionsModule;
 
 use Zend\ModuleManager\ModuleManager;
 use Zend\EventManager\Event;
-use SdsDoctrineExtensions\Common\AnnotationRegistrator;
 use SdsDoctrineExtensions\Serializer\SerializerService;
+use SdsInitalizerModule\Service\Events as InitalizerEvents;
 
 class Module
 {
+    
     public function init(ModuleManager $moduleManager){
         $sharedEvents = $moduleManager->events()->getSharedManager();
-        $sharedEvents->attach('DoctrineMongoODMModule', 'loadDrivers', array($this, 'loadMongoODMDrivers'));      
-        $sharedEvents->attach('DoctrineMongoODMModule', 'loadFilters', array($this, 'loadMongoODMFilters'));           
-        $sharedEvents->attach('DoctrineMongoODMModule', 'loadSubscribers', array($this, 'loadMongoODMSubscribers'));         
-        $sharedEvents->attach('DoctrineMongoODMModule', 'loadAnnotations', array($this, 'loadMongoODMAnnotations'));         
+        $sharedEvents->attach(
+            InitalizerEvents::IDENTIFIER, 
+            InitalizerEvents::LOAD_CONTROLLER_LOADER_INITALIZERS, 
+            array($this, 'loadInitalizers')
+        );
+        $sharedEvents->attach(
+            InitalizerEvents::IDENTIFIER, 
+            InitalizerEvents::LOAD_SERVICE_MANAGER_INITALIZERS, 
+            array($this, 'loadInitalizers')
+        );        
     }
+    
+    public function loadInitalizers(Event $event){
+        $serviceLocator = $event->getTarget();
+        $config = $serviceLocator->get('Configuration');
+        $config = $config['sdsDoctrineExtensions'];
+        return array(
+            'AnnotationReaderAwareInterface' =>
+                function ($instance) use ($serviceLocator, $config) {
+                    if ($instance instanceof AnnotationReaderAwareInterface) {
+                        $instance->setAnnotationReader($serviceLocator->get($config['annotationReader']));
+                    }
+                },
+            'ActiveUserAwareInterface' =>
+                function ($instance) use ($serviceLocator, $config) {
+                    if ($instance instanceof ActiveUserAwareInterface) {
+                        $instance->setActiveUser($serviceLocator->get($config['activeUser']));
+                    }
+                }                
+        );
+    }    
     
     public function getConfig()
     {
@@ -24,55 +51,25 @@ class Module
 
     public function onBootstrap(Event $e){       
         $app = $e->getParam('application');        
-        $serviceManager = $app->getServiceManager();
-        $documentManager = $serviceManager->get('mongo_dm');
+        $serviceLocator = $app->getServiceManager();
+        $documentManager = $serviceLocator->get('mongo_dm');
         
         $serializerService = SerializerService::getInstance();
         $serializerService->setDocumentManager($documentManager);                  
         
-        $activeUser = $serviceManager->get('active_user');
+        $config = $serviceLocator->get('Configuration');
+        $config = $config['sdsDoctrineExtensions'];        
+        $activeUser = $serviceLocator->get($config['activeUser']);
         $filter = $documentManager->getFilters()->enable('readAccessControl');        
         $filter->setParameter('activeUser', $activeUser);
-    }
-    
-    public function loadMongoODMDrivers($e){
-        $serviceLocator = $e->getTarget();
-        $reader = $serviceLocator->get('Doctrine\Common\Annotations\CachedReader');
-        $config = $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['drivers'];
-        $return = array();
-        
-        foreach($config as $params){
-            $return[$params['namespace']] = new $params['class']($reader, $params['paths']);
-        }   
-        return $return;
-    }
-    
-    public function loadMongoODMFilters($e){
-        $serviceLocator = $e->getTarget();
-        return $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['filters'];       
-    }
-    
-    public function loadMongoODMSubscribers($e){
-        $serviceLocator = $e->getTarget();
-        $subscriberClasses = $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['subscribers'];
-        $subscribers = array();
-        foreach($subscriberClasses as $subscriberClass){
-            $subscribers[] = $serviceLocator->get($subscriberClass);
-        }
-        return $subscribers;
-    }
-
-    public function loadMongoODMAnnotations($e){
-        $serviceLocator = $e->getTarget();
-        return $serviceLocator->get('Configuration')['sdsDoctrineExtensions']['annnotations'];
-    }
-    
-    public function getServiceConfiguration()
-    {
-        return array(
-            'abstract_factories' => array(
-                'SdsDoctrineExtensions\Common\Listener\AbstractListener' => 'SdsDoctrineExtensionsModule\Service\ListenerFactory',
-            )
-        );
-    }  
+    }        
+       
+//    public function getServiceConfiguration()
+//    {
+//        return array(
+//            'abstract_factories' => array(
+//                'SdsDoctrineExtensions\Common\Listener\AbstractListener' => 'SdsDoctrineExtensionsModule\Service\ListenerFactory',
+//            )
+//        );
+//    }  
 }
