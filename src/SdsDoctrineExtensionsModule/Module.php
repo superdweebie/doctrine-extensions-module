@@ -60,7 +60,7 @@ class Module
         $config = $serviceLocator->get('Configuration');
         $config = $config['sdsDoctrineExtensions'];        
         $activeUser = $serviceLocator->get($config['activeUser']);
-        $filter = $documentManager->getFilters()->enable('readAccessControl');        
+        $filter = $documentManager->getFilterCollection()->enable('readAccessControl');        
         $filter->setParameter('activeUser', $activeUser);
     }        
        
