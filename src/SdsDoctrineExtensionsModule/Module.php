@@ -52,7 +52,7 @@ class Module
     public function onBootstrap(Event $e){       
         $app = $e->getParam('application');        
         $serviceLocator = $app->getServiceManager();
-        $documentManager = $serviceLocator->get('mongo_dm');
+        $documentManager = $serviceLocator->get('Doctrine\ODM\MongoDB\DocumentManager');
         
         $serializerService = SerializerService::getInstance();
         $serializerService->setDocumentManager($documentManager);                  
