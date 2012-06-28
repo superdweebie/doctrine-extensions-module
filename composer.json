@@ -15,13 +15,14 @@
     ],
     "require": {
         "php": ">=5.4",
+        "doctrine/DoctrineMongoODMModule": "dev-master",
         "superdweebie/SdsDoctrineExtensions": "dev-master"
     },
 
     "autoload": {
         "psr-0": {
             "SdsDoctrineExtensionsModule": "src/",
-            "SdsDoctrineExtensionsModuleTest": "tests/"            
+            "SdsDoctrineExtensionsModuleTest": "tests/"
         }
     }
 }

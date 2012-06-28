@@ -1,0 +1,6 @@
+{
+    "require": {
+        "zendframework/zendframework": "dev-master",
+        "superdweebie/SdsDoctrineExtensionsModule": "dev-master"
+    }
+}
