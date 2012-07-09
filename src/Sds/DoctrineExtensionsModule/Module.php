@@ -4,9 +4,9 @@
  * @package    Sds
  * @license    MIT
  */
-namespace SdsDoctrineExtensionsModule;
+namespace Sds\DoctrineExtensionsModule;
 
-use SdsDoctrineExtensionsModule\Service\ManifestFactory;
+use Sds\DoctrineExtensionsModule\Service\ManifestFactory;
 use Zend\EventManager\Event;
 
 /**
@@ -26,7 +26,7 @@ class Module
         $app = $event->getTarget();
         $serviceManager = $app->getServiceManager();
 
-        $manifest = $serviceManager->get('sdsDoctrineExtensions.mainfest');
+        $manifest = $serviceManager->get('sds.doctrineExtensions.mainfest');
 
         $config = $serviceManager->get('Configuration');
 
@@ -66,7 +66,7 @@ class Module
     {
         return array(
             'factories' => array(
-                'sdsDoctrineExtensions.manifest'    => new ManifestFactory()
+                'sds.doctrineExtensions.manifest'    => new ManifestFactory()
             )
         );
     }

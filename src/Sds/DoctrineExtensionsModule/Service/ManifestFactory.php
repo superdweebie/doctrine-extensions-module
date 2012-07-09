@@ -4,10 +4,10 @@
  * @package    Sds
  * @license    MIT
  */
-namespace SdsDoctrineExtensionsModule\Service;
+namespace Sds\DoctrineExtensionsModule\Service;
 
 use Doctrine\Common\Annotations;
-use SdsDoctrineExtensions\Manifest;
+use Sds\DoctrineExtensions\Manifest;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
