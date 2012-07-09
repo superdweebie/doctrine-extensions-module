@@ -1,12 +1,12 @@
 {
-    "name": "superdweebie/SdsDoctrineExtensionsModule",
-    "description": "Zend Framework 2 Module that provides SdsDoctrineExtensions functionality",
+    "name": "superdweebie/doctrineExtensionsModule",
+    "description": "Zend Framework 2 Module that provides Sds DoctrineExtensions functionality",
     "type": "library",
     "keywords": [
         "doctrine",
         "zf2"
     ],
-    "homepage": "http://github.com/superdweebie/SdsDoctrineExtensionsModule",
+    "homepage": "http://github.com/superdweebie/doctrineExtensionsModule",
     "authors": [
         {
             "name": "Tim Roediger",
@@ -16,13 +16,12 @@
     "require": {
         "php": ">=5.4",
         "doctrine/DoctrineMongoODMModule": "dev-master",
-        "superdweebie/SdsDoctrineExtensions": "dev-master"
+        "superdweebie/doctrineExtensions": "dev-master"
     },
 
     "autoload": {
         "psr-0": {
-            "SdsDoctrineExtensionsModule": "src/",
-            "SdsDoctrineExtensionsModuleTest": "tests/"
+            "Sds\\DoctrineExtensionsModule": "src/"
         }
     }
 }
