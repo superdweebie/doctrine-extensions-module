@@ -1,9 +1,13 @@
 <?php
 return array(
     'sdsDoctrineExtensions' => array(
-        'activeUser' => 'SdsAuthModule\ActiveUser',
-        'annotationReader' => 'Doctrine\Common\Annotations\CachedReader',
-        'extensions' => array(
+        'doctrine' => array(
+            'driver' => 'odm_default',
+            'eventmanager' => 'odm_default',
+            'configuration' => 'odm_default',
+        ),
+        'activeUser' => 'sdsAuthModule.activeUser',
+        'extensionConfigs' => array(
             'SdsDoctrineExtensions\AccessControl' => null,
             'SdsDoctrineExtensions\Audit' => null,
             'SdsDoctrineExtensions\DoNotHardDelete' => null,

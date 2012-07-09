@@ -1,70 +1,73 @@
 <?php
-
+/**
+ * @link       http://superdweebie.com
+ * @package    Sds
+ * @license    MIT
+ */
 namespace SdsDoctrineExtensionsModule;
 
-use DoctrineMongoODModule\Events;
-use SdsDoctrineExtensions\Manifest;
-use SdsDoctrineExtensions\ManifestConfig;
-use Zend\ModuleManager\ModuleManager;
+use SdsDoctrineExtensionsModule\Service\ManifestFactory;
 use Zend\EventManager\Event;
 
+/**
+ *
+ * @since   1.0
+ * @author  Tim Roediger <superdweebie@gmail.com>
+ */
 class Module
 {
 
-    protected $manifest;
+    /**
+     *
+     * @param \Zend\EventManager\Event $event
+     */
+    public function onBootstrap(Event $event)
+    {
+        $app = $event->getTarget();
+        $serviceManager = $app->getServiceManager();
 
-    public function init(ModuleManager $moduleManager){
-        $sharedEvents = $moduleManager->events()->getSharedManager();
-        $sharedEvents->attach(
-            Events::identifier,
-            Events::getSubscribers,
-            array($this, 'getSubscribers')
-        );
-        $sharedEvents->attach(
-            Events::identifier,
-            Events::getAnnotations,
-            array($this, 'getAnnotations')
-        );
-        $sharedEvents->attach(
-            Events::identifier,
-            Events::getFilters,
-            array($this, 'getFilters')
-        );
-    }
+        $manifest = $serviceManager->get('sdsDoctrineExtensions.mainfest');
 
-    public function getManifest(ServiceLocator $serviceLocator){
-        if (!isset($this->manifest)) {
-            $config = $serviceLocator->get('Configuration')['sdsDoctrineExtensions'];
-            $activeUser = $serviceLocator->get($config['activeUser']);
-            $annotationReader = $serviceLocator->get($config['annotationReader']);
+        $config = $serviceManager->get('Configuration');
 
-            $manifestConfig = new ManifestConfig($annotationReader, null, $activeUser);
-
-            foreach ($config['extensions'] as $namespace => $extensionConfigArray) {
-                $extensionConfigClass = $namespace . '\ExtensionConfig';
-                $extensionConfig = new $extensionConfigClass($extensionConfigArray);
-                $manifestConfig->addExtensionConfig($namespace, $extensionConfig);
-            }
-
-            $this->manifest = new Manifest($manifestConfig);
+        //Inject subscribers
+        foreach ($manifest->getSubscribers() as $subscriber) {
+            $config['doctrine']['eventmanager'][$config['sdsDoctrineExtensions']['doctrine']['eventmanager']]['subscribers'][] = $subscriber;
         }
-        return $this->manifest;
-    }
 
-    public function getSubscribers(Event $event){
-        return $this->getManifest($event->getTarget())->getSubscribers();
-    }
+        //Inject annotations
+        foreach ($manifest->getAnnotations() as $namespace => $path) {
+            $config['doctrine'][$config['sdsDoctrineExtensions']['doctrine']['configuration']]['annotations'][$namespace] = $path;
+        }
 
-    public function getAnnotations(Event $event){
-        return $this->getManifest($event->getTarget())->getAnnotations();
-    }
+        //Inject filtsers
+        foreach ($manifest->getFilters() as $filter) {
+            $config['doctrine'][$config['sdsDoctrineExtensions']['doctrine']['configuration']]['filters'][] = $filter;
+        }
 
-    public function getFilters(Event $event){
-        return $this->getManifest($event->getTarget())->getFilters();
+        //inject document paths
+        $config['doctrine']['driver'][$config['sdsDoctrineExtensions']['doctrine']['driver']]['drivers'][] = array(
+            'paths' => $manifest->getDocuments()
+        );
+
+        $serviceManager->set('Configuration', $config);
     }
 
     public function getConfig()
     {
         return include __DIR__ . '/../../config/module.config.php';
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getServiceConfiguration()
+    {
+        return array(
+            'factories' => array(
+                'sdsDoctrineExtensions.manifest'    => new ManifestFactory()
+            )
+        );
     }
 }
