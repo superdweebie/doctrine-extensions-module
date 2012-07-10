@@ -1,6 +1,8 @@
 {
+    "minimum-stability": "dev",
     "require": {
-        "zendframework/zendframework": "dev-master",
-        "superdweebie/SdsDoctrineExtensionsModule": "dev-master"
+        "zendframework/zendframework": "master@dev",
+        "superdweebie/doctrineExtensionsModule": "master@dev",
+        "superdweebie/authModule": "master@dev"
     }
 }

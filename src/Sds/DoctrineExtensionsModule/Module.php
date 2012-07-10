@@ -6,8 +6,11 @@
  */
 namespace Sds\DoctrineExtensionsModule;
 
-use Sds\DoctrineExtensionsModule\Service\ManifestFactory;
-use Zend\EventManager\Event;
+use Doctrine\Common\Annotations;
+use Sds\DoctrineExtensions\Manifest;
+use Sds\DoctrineExtensions\ManifestConfig;
+use Zend\ModuleManager\ModuleEvent;
+use Zend\ModuleManager\ModuleManager;
 
 /**
  *
@@ -17,57 +20,82 @@ use Zend\EventManager\Event;
 class Module
 {
 
+    public function init(ModuleManager $moduleManager) {
+        $eventManager = $moduleManager->getEventManager();
+        $eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'onLoadModulesPost'));
+    }
+
     /**
      *
      * @param \Zend\EventManager\Event $event
      */
-    public function onBootstrap(Event $event)
-    {
-        $app = $event->getTarget();
-        $serviceManager = $app->getServiceManager();
+    public function onLoadModulesPost(ModuleEvent $event) {
 
-        $manifest = $serviceManager->get('sds.doctrineExtensions.mainfest');
+        $serviceLocator = $event->getParam('ServiceManager');
+        $config = $serviceLocator->get('configuration');
+        $doctrineConfig = $config['doctrine'];
+        $extensionsConfig = $config['sds']['doctrineExtensions'];
 
-        $config = $serviceManager->get('Configuration');
+        if (isset($doctrineConfig[$extensionsConfig['doctrine']['configuration']]['metadataCache'])){
+            $cacheName = 'doctrine.cache'.$doctrineConfig[$extensionsConfig['doctrine']['configuration']]['metadataCache'];
+        } else {
+            $cacheName = 'doctrine.cache.array';
+        }
+
+        $reader = new Annotations\AnnotationReader;
+        $reader = new Annotations\CachedReader(
+            new Annotations\IndexedReader($reader),
+            $serviceLocator->get($cacheName)
+        );
+
+        $manifestConfig = array(
+            'AnnotationReader' => $reader,
+            'ExtensionConfigs' => $extensionsConfig['extensionConfigs']
+        );
+
+        if (isset($extensionsConfig['activeUser'])) {
+            if (is_string($extensionsConfig['activeUser'])) {
+                $manifestConfig['activeUser'] = $serviceLocator->get($extensionsConfig['activeUser']);
+            } else {
+                $manifestConfig['activeUser'] = $extensionsConfig['activeUser'];
+            }
+        }
+
+        $manifest = new Manifest(new ManifestConfig($manifestConfig));
 
         //Inject subscribers
         foreach ($manifest->getSubscribers() as $subscriber) {
-            $config['doctrine']['eventmanager'][$config['sdsDoctrineExtensions']['doctrine']['eventmanager']]['subscribers'][] = $subscriber;
+            $doctrineConfig['eventmanager'][$extensionsConfig['doctrine']['eventmanager']]['subscribers'][] = $subscriber;
         }
 
         //Inject annotations
         foreach ($manifest->getAnnotations() as $namespace => $path) {
-            $config['doctrine'][$config['sdsDoctrineExtensions']['doctrine']['configuration']]['annotations'][$namespace] = $path;
+            $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['annotations'][$namespace] = $path;
         }
 
-        //Inject filtsers
+        //Inject filters
         foreach ($manifest->getFilters() as $filter) {
-            $config['doctrine'][$config['sdsDoctrineExtensions']['doctrine']['configuration']]['filters'][] = $filter;
+            $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['filters'][] = $filter;
         }
 
         //inject document paths
-        $config['doctrine']['driver'][$config['sdsDoctrineExtensions']['doctrine']['driver']]['drivers'][] = array(
-            'paths' => $manifest->getDocuments()
-        );
+        $id = 0;
+        foreach ($manifest->getDocuments() as $namespace => $path) {
+            $name = 'sds.doctrineExtensions.'.$id;
+            $doctrineConfig['driver'][$extensionsConfig['doctrine']['driver']]['drivers'][$namespace] = $name;
+            $doctrineConfig['driver'][$name] = array(
+                'paths' => array($path)
+            );
+            $id++;
+        }
 
-        $serviceManager->set('Configuration', $config);
+        $config['doctrine'] = $doctrineConfig;
+        $serviceLocator->setService('Configuration', $config);
     }
 
     public function getConfig()
     {
-        return include __DIR__ . '/../../config/module.config.php';
+        return include __DIR__ . '/../../../config/module.config.php';
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getServiceConfiguration()
-    {
-        return array(
-            'factories' => array(
-                'sds.doctrineExtensions.manifest'    => new ManifestFactory()
-            )
-        );
-    }
 }

@@ -18,7 +18,9 @@
         "doctrine/DoctrineMongoODMModule": "dev-master",
         "superdweebie/doctrineExtensions": "dev-master"
     },
-
+    "suggest": {
+        "superdweebie/authModule": "Sds\\AuthModule this is the default configured provider of the activeUser"
+    },
     "autoload": {
         "psr-0": {
             "Sds\\DoctrineExtensionsModule": "src/"

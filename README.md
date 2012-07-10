@@ -1,4 +1,4 @@
-SdsDoctrineExtensionsModule
-===========================
+Sds doctrineExtensionsModule
+============================
 
-A zf2 module for the SdsDoctrineExtensions
+A zf2 module for the Sds doctrineExtensions
