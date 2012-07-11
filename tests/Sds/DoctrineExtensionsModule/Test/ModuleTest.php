@@ -1,6 +1,6 @@
 <?php
 
-namespace Sds\DoctrineExtensionsModule\Test;
+namespace Sds\ModuleUnitTester\BaseTest;
 
 class ControllerTest extends BaseTest{
 

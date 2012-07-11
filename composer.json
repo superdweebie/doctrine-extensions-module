@@ -15,8 +15,14 @@
     ],
     "require": {
         "php": ">=5.4",
+<<<<<<< Updated upstream
         "doctrine/DoctrineMongoODMModule": "dev-master",
         "superdweebie/doctrine-extensions": "dev-master"
+=======
+        "doctrine/doctrine-mongo-odm-module": "master@dev",
+        "superdweebie/doctrine-extensions": "master@dev",
+        "superdweebie/module-unit-tester": "master@dev"
+>>>>>>> Stashed changes
     },
     "suggest": {
         "superdweebie/authModule": "Sds\\AuthModule this is the default configured provider of the activeUser"
