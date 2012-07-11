@@ -6,6 +6,7 @@ return array(
                 'driver' => 'odm_default',
                 'eventmanager' => 'odm_default',
                 'configuration' => 'odm_default',
+                'documentmanager' => 'odm_default',
             ),
             'activeUser' => 'sds.auth.activeUser',
             'extensionConfigs' => array(
@@ -23,5 +24,10 @@ return array(
 //                'Sds\DoctrineExtensions\Zone' => null,
             ),
         ),
+    ),
+    'service_manager' => array(
+        'factories' => array(
+            'sds.doctrineExtensions.serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory'
+        )
     ),
 );
