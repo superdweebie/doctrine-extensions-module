@@ -1,5 +1,5 @@
 {
-    "name": "superdweebie/doctrineExtensionsModule",
+    "name": "superdweebie/doctrine-extensions-module",
     "description": "Zend Framework 2 Module that provides Sds DoctrineExtensions functionality",
     "type": "library",
     "keywords": [
@@ -16,7 +16,7 @@
     "require": {
         "php": ">=5.4",
         "doctrine/DoctrineMongoODMModule": "dev-master",
-        "superdweebie/doctrineExtensions": "dev-master"
+        "superdweebie/doctrine-extensions": "dev-master"
     },
     "suggest": {
         "superdweebie/authModule": "Sds\\AuthModule this is the default configured provider of the activeUser"
