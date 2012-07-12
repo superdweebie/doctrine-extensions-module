@@ -18,9 +18,10 @@ before_script:
   - cp ../doctrineExtensionsModule/.travis/composer.json ./
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
-  - rm -rf vendor/superdweebie/doctrineExtensionsModule
+  - rm -rf vendor/superdweebie/doctrine-extensions-module
   - cp -r ../doctrineExtensionsModule vendor/superdweebie/
-
+  - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module  
+  
 script:
-  - cd vendor/superdweebie/doctrineExtensionsModule
+  - cd vendor/superdweebie/doctrine-extensions-module
   - phpunit
