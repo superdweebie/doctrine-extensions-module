@@ -2,7 +2,9 @@
 
 namespace Sds\ModuleUnitTester\BaseTest;
 
-class ControllerTest extends BaseTest{
+use Sds\ModuleUnitTester\BaseTest;
+
+class ModuleTest extends BaseTest{
 
     public function setUp(){
         parent::setUp();
@@ -11,6 +13,8 @@ class ControllerTest extends BaseTest{
     protected function alterConfig(array $config) {
         $config['sds']['doctrineExtensions']['extensionConfigs'] = array(
             'Sds\DoctrineExtensions\AccessControl' => null,
+            'Sds\DoctrineExtensions\Accessor' => null,
+            'Sds\DoctrineExtensions\Annotation' => null,
             'Sds\DoctrineExtensions\Audit' => null,
             'Sds\DoctrineExtensions\DoNotHardDelete' => null,
             'Sds\DoctrineExtensions\Freeze' => null,
@@ -20,6 +24,7 @@ class ControllerTest extends BaseTest{
             'Sds\DoctrineExtensions\Stamp' => null,
             'Sds\DoctrineExtensions\State' => null,
             'Sds\DoctrineExtensions\UiHints' => null,
+            'Sds\DoctrineExtensions\Validator' => null,
             'Sds\DoctrineExtensions\Workflow' => null,
             'Sds\DoctrineExtensions\Zone' => null,
         );

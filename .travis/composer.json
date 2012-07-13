@@ -1,8 +1,9 @@
 {
     "minimum-stability": "dev",
     "require": {
-        "zendframework/zendframework": "master@dev",
-        "superdweebie/doctrine-extensions-module": "master@dev",
-        "superdweebie/auth-module": "master@dev"
+        "zendframework/zendframework": "dev-master",
+        "superdweebie/doctrine-extensions-module": "dev-master",
+        "superdweebie/auth-module": "dev-master",
+        "superdweebie/user-module": "dev-master"
     }
 }

@@ -14,14 +14,13 @@ before_script:
   - cd ZendSkeletonApplication
   - rm .gitmodules
   - git rm --cached vendor/ZF2
-  - rm config/application.config.php && cp ../doctrineExtensionsModule/.travis/application.config.php config/
   - cp ../doctrineExtensionsModule/.travis/composer.json ./
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
   - rm -rf vendor/superdweebie/doctrine-extensions-module
   - cp -r ../doctrineExtensionsModule vendor/superdweebie/
-  - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module  
-  
+  - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
+
 script:
   - cd vendor/superdweebie/doctrine-extensions-module
   - phpunit

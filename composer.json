@@ -15,17 +15,13 @@
     ],
     "require": {
         "php": ">=5.4",
-<<<<<<< Updated upstream
-        "doctrine/DoctrineMongoODMModule": "dev-master",
-        "superdweebie/doctrine-extensions": "dev-master"
-=======
-        "doctrine/doctrine-mongo-odm-module": "master@dev",
-        "superdweebie/doctrine-extensions": "master@dev",
-        "superdweebie/module-unit-tester": "master@dev"
->>>>>>> Stashed changes
+        "superdweebie/doctrine-extensions": "dev-master",
+        "doctrine/doctrine-mongo-odm-module": "dev-master",
+        "superdweebie/doctrine-extensions": "dev-master",
+        "superdweebie/module-unit-tester": "dev-master"
     },
     "suggest": {
-        "superdweebie/authModule": "Sds\\AuthModule this is the default configured provider of the activeUser"
+        "superdweebie/auth-module": "Sds\\AuthModule this is the default configured provider of the activeUser"
     },
     "autoload": {
         "psr-0": {
