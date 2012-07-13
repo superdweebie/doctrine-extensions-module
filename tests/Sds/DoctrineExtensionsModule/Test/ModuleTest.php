@@ -32,7 +32,6 @@ class ModuleTest extends BaseTest{
     }
 
     public function testModule(){
-
         $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
     }
 }

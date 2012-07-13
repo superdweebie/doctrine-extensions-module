@@ -15,8 +15,8 @@ while (!file_exists('config/application.config.php')) {
 }
 
 $loader = require_once('vendor/autoload.php');
-$loader->add('Sds\\AuthModule\\Test', __DIR__);
-$loader->add('Sds\\ModuleUnitTester', __DIR__ . '\..\..\..\superdweebie\module-unit-tester\lib');
+$loader->add('Sds\\DoctrineExtensionsModule\\Test', __DIR__);
+$loader->add('Sds\\ModuleUnitTester', __DIR__ . '/../../../superdweebie/module-unit-tester/lib');
 
 \Sds\ModuleUnitTester\BaseTest::setServiceConfigPaths(array(
     __DIR__ . '/TestConfiguration.php',
