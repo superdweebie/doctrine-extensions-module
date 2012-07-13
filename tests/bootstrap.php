@@ -18,6 +18,7 @@ $loader = require_once('vendor/autoload.php');
 $loader->add('Sds\\DoctrineExtensionsModule\\Test', __DIR__);
 $loader->add('Sds\\ModuleUnitTester', __DIR__ . '/../../../superdweebie/module-unit-tester/lib');
 
+\Sds\ModuleUnitTester\DependencyChecker::CheckTestDependencies(__DIR__ . '/composer.json');
 \Sds\ModuleUnitTester\BaseTest::setServiceConfigPaths(array(
     __DIR__ . '/TestConfiguration.php',
     __DIR__ . '/TestConfiguration.php.dist'

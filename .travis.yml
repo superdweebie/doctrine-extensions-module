@@ -14,7 +14,7 @@ before_script:
   - cd ZendSkeletonApplication
   - rm .gitmodules
   - git rm --cached vendor/ZF2
-  - cp ../doctrineExtensionsModule/.travis/composer.json ./
+  - cp ../doctrineExtensionsModule/tests/composer.json ./
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
   - rm -rf vendor/superdweebie/doctrine-extensions-module
