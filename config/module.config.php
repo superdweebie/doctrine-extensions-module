@@ -11,7 +11,10 @@ return array(
             'activeUser' => 'sds.auth.activeUser',
             'extensionConfigs' => array(
 //                'Sds\DoctrineExtensions\AccessControl' => null,
+//                'Sds\DoctrineExtensions\Accessor' => null,
+//                'Sds\DoctrineExtensions\Annotation' => null,
 //                'Sds\DoctrineExtensions\Audit' => null,
+//                'Sds\DoctrineExtensions\DiscriminatorMap' => null,
 //                'Sds\DoctrineExtensions\DoNotHardDelete' => null,
 //                'Sds\DoctrineExtensions\Freeze' => null,
 //                'Sds\DoctrineExtensions\Readonly' => null,
@@ -20,6 +23,7 @@ return array(
 //                'Sds\DoctrineExtensions\Stamp' => null,
 //                'Sds\DoctrineExtensions\State' => null,
 //                'Sds\DoctrineExtensions\UiHints' => null,
+//                'Sds\DoctrineExtensions\Validator' => null,
 //                'Sds\DoctrineExtensions\Workflow' => null,
 //                'Sds\DoctrineExtensions\Zone' => null,
             ),

@@ -16,6 +16,7 @@ class ModuleTest extends BaseTest{
             'Sds\DoctrineExtensions\Accessor' => null,
             'Sds\DoctrineExtensions\Annotation' => null,
             'Sds\DoctrineExtensions\Audit' => null,
+            'Sds\DoctrineExtensions\DiscriminatorMap' => null,
             'Sds\DoctrineExtensions\DoNotHardDelete' => null,
             'Sds\DoctrineExtensions\Freeze' => null,
             'Sds\DoctrineExtensions\Readonly' => null,
