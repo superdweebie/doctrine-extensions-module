@@ -2,9 +2,9 @@
 
 namespace Sds\ModuleUnitTester\BaseTest;
 
-use Sds\ModuleUnitTester\BaseTest;
+use Sds\ModuleUnitTester\AbstractTest;
 
-class ModuleTest extends BaseTest{
+class ModuleTest extends AbstractTest{
 
     public function setUp(){
         parent::setUp();
