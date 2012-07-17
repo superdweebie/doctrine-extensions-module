@@ -29,6 +29,30 @@ class Module
      *
      * @param \Zend\EventManager\Event $event
      */
+    public function onBootstrap(Event $event)
+    {
+        $app = $event->getTarget();
+        $sharedManager = $app->getEventManager()->getSharedManager();
+
+        // Attach to helper set event and load the document manager helper.
+        $sharedManager->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
+    }
+
+    /**
+     *
+     * @param \Zend\EventManager\Event $event
+     */
+    public function loadCli(Event $event){
+        $cli = $event->getTarget();
+        $cli->addCommands(array(
+            new \Sds\DoctrineExtensions\DojoModel\Console\Command\GenerateModelsCommand()
+        ));
+    }
+
+    /**
+     *
+     * @param \Zend\EventManager\Event $event
+     */
     public function onLoadModulesPost(ModuleEvent $event) {
 
         $serviceLocator = $event->getParam('ServiceManager');
