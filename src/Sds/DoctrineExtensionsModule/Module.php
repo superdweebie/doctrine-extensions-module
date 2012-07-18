@@ -9,8 +9,10 @@ namespace Sds\DoctrineExtensionsModule;
 use Doctrine\Common\Annotations;
 use Sds\DoctrineExtensions\Manifest;
 use Sds\DoctrineExtensions\ManifestConfig;
+use Zend\EventManager\Event;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\MvcEvent;
 
 /**
  *
@@ -19,6 +21,8 @@ use Zend\ModuleManager\ModuleManager;
  */
 class Module
 {
+
+    protected $manifest;
 
     public function init(ModuleManager $moduleManager) {
         $eventManager = $moduleManager->getEventManager();
@@ -29,7 +33,7 @@ class Module
      *
      * @param \Zend\EventManager\Event $event
      */
-    public function onBootstrap(Event $event)
+    public function onBootstrap(MvcEvent $event)
     {
         $app = $event->getTarget();
         $sharedManager = $app->getEventManager()->getSharedManager();
@@ -44,9 +48,12 @@ class Module
      */
     public function loadCli(Event $event){
         $cli = $event->getTarget();
-        $cli->addCommands(array(
-            new \Sds\DoctrineExtensions\DojoModel\Console\Command\GenerateModelsCommand()
-        ));
+        $cli->addCommands($this->manifest->getCliCommands());
+
+        $helperSet = $cli->getHelperSet();
+        foreach ($this->manifest->getCliHelpers() as $key => $helper) {
+            $helperSet->set($helper, $key);
+        }
     }
 
     /**
@@ -86,6 +93,7 @@ class Module
         }
 
         $manifest = new Manifest(new ManifestConfig($manifestConfig));
+        $this->manifest = $manifest;
 
         //Inject subscribers
         foreach ($manifest->getSubscribers() as $subscriber) {
@@ -114,12 +122,15 @@ class Module
         }
 
         $config['doctrine'] = $doctrineConfig;
+
+        $allowOverride = $serviceLocator->getAllowOverride();
+        $serviceLocator->setAllowOverride(true);
         $serviceLocator->setService('Configuration', $config);
+        $serviceLocator->setAllowOverride($allowOverride);
     }
 
     public function getConfig()
     {
         return include __DIR__ . '/../../../config/module.config.php';
     }
-
 }

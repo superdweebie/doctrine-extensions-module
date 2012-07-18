@@ -15,6 +15,9 @@ return array(
 //                'Sds\DoctrineExtensions\Annotation' => null,
 //                'Sds\DoctrineExtensions\Audit' => null,
 //                'Sds\DoctrineExtensions\DiscriminatorMap' => null,
+                'Sds\DoctrineExtensions\DojoModel' => array(
+                    'destPath' => 'public/js/dojo_src'
+                )
 //                'Sds\DoctrineExtensions\DoNotHardDelete' => null,
 //                'Sds\DoctrineExtensions\Freeze' => null,
 //                'Sds\DoctrineExtensions\Readonly' => null,

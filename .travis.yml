@@ -22,5 +22,6 @@ before_script:
   - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
 
 script:
+  - ./vendor/bin/doctrine-module odm:generate:dojoModels
   - cd vendor/superdweebie/doctrine-extensions-module
   - phpunit
