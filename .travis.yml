@@ -20,6 +20,9 @@ before_script:
   - rm -rf vendor/superdweebie/doctrine-extensions-module
   - cp -r ../doctrineExtensionsModule vendor/superdweebie/
   - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
+  - rm config/application.config.php
+  - cp ../doctrineExtensionsModule/tests/TestConfiguration.php.dist config/
+  - mv config/TestConfiguration.php.dist config/application.config.php  
 
 script:
   - ./vendor/bin/doctrine-module odm:generate:dojoModels
