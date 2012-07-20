@@ -116,6 +116,7 @@ class Module
             $name = 'sds.doctrineExtensions.'.$id;
             $doctrineConfig['driver'][$extensionsConfig['doctrine']['driver']]['drivers'][$namespace] = $name;
             $doctrineConfig['driver'][$name] = array(
+                'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
                 'paths' => array($path)
             );
             $id++;
