@@ -25,7 +25,7 @@ class SerializerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('configuration');
+        $config = $serviceLocator->get('Config');
         return new Serializer($serviceLocator->get(
             'doctrine.documentmanager.'.$config['sds']['doctrineExtensions']['doctrine']['documentmanager'])
         );

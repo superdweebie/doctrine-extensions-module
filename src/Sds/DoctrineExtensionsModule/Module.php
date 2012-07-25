@@ -63,7 +63,7 @@ class Module
     public function onLoadModulesPost(ModuleEvent $event) {
 
         $serviceLocator = $event->getParam('ServiceManager');
-        $config = $serviceLocator->get('configuration');
+        $config = $serviceLocator->get('config');
         $doctrineConfig = $config['doctrine'];
         $extensionsConfig = $config['sds']['doctrineExtensions'];
 
@@ -126,7 +126,7 @@ class Module
 
         $allowOverride = $serviceLocator->getAllowOverride();
         $serviceLocator->setAllowOverride(true);
-        $serviceLocator->setService('Configuration', $config);
+        $serviceLocator->setService('Config', $config);
         $serviceLocator->setAllowOverride($allowOverride);
     }
 
