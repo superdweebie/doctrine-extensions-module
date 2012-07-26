@@ -33,8 +33,11 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'invokables' => array(
+            'sds.doctrineExtensions.validator' => 'Sds\DoctrineExtensions\Validator\DocumentValidator',
+        ),
         'factories' => array(
-            'sds.doctrineExtensions.serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory'
+            'sds.doctrineExtensions.serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory',
         )
     ),
 );

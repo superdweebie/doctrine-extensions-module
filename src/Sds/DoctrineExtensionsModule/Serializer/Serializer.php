@@ -75,5 +75,9 @@ class Serializer
     public function fromArray(array $data, $classNameKey = null, $className = null) {
         return StaticSerializer::fromArray($data, $this->documentManager, $classNameKey, $className);
     }
+
+    public function applySerializeMetadataToArray(array $data, $className) {
+        return StaticSerializer::applySerializeMetadataToArray($data, $className, $this->documentManager);
+    }
 }
 
