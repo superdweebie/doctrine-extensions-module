@@ -62,8 +62,22 @@ class Serializer
      * @return string
      */
     public function toJson($document){
-        return json_encode(StaticSerializer::toJson($document, $this->documentManager));
+        return StaticSerializer::toJson($document, $this->documentManager);
     }
 
+    /**
+     *
+     * @param array $data
+     * @param string $classNameKey
+     * @param string $className
+     * @return object
+     */
+    public function fromArray(array $data, $classNameKey = null, $className = null) {
+        return StaticSerializer::fromArray($data, $this->documentManager, $classNameKey, $className);
+    }
+
+    public function applySerializeMetadataToArray(array $data, $className) {
+        return StaticSerializer::applySerializeMetadataToArray($data, $className, $this->documentManager);
+    }
 }
 
