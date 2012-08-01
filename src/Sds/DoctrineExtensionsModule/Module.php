@@ -9,6 +9,7 @@ namespace Sds\DoctrineExtensionsModule;
 use Doctrine\Common\Annotations;
 use Sds\DoctrineExtensions\Manifest;
 use Sds\DoctrineExtensions\ManifestConfig;
+use Sds\DoctrineExtensionsModule\RenderFlushListener;
 use Zend\EventManager\Event;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -35,11 +36,18 @@ class Module
      */
     public function onBootstrap(MvcEvent $event)
     {
-        $app = $event->getTarget();
-        $sharedManager = $app->getEventManager()->getSharedManager();
-
+        $application = $event->getTarget();
+        $serviceManager = $application->getServiceManager();
+        $config = $serviceManager->get('Config')['sds']['doctrineExtensions'];
+        $eventManager = $application->getEventManager();
+            
+        // Attach to onRender for flush
+        if ($config['renderFlushListener']) {
+            $eventManager->attach($serviceManager->get('sds.doctrineExtensions.renderFlushListener'));
+        }
+        
         // Attach to helper set event and load the document manager helper.
-        $sharedManager->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
+        $eventManager->getSharedManager()->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
     }
 
     /**

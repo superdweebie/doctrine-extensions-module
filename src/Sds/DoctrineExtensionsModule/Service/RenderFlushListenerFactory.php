@@ -5,7 +5,7 @@
  */
 namespace Sds\DoctrineExtensionsModule\Service;
 
-use Sds\DoctrineExtensionsModule\Serializer\Serializer;
+use Sds\DoctrineExtensionsModule\RenderFlushListener;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,7 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class SerializerFactory implements FactoryInterface
+class RenderFlushListenerFactory implements FactoryInterface
 {
 
     /**
@@ -26,6 +26,6 @@ class SerializerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config')['sds']['doctrineExtensions'];
-        return new Serializer($serviceLocator->get($config['doctrine']['documentManager']));
+        return new RenderFlushListener($serviceLocator->get($config['doctrine']['documentManager']));
     }
 }

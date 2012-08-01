@@ -1,14 +1,15 @@
 <?php
 return array(
     'sds' => array(
-        'doctrineExtensions' => array(
+        'doctrineExtensions' => array(            
             'doctrine' => array(
                 'driver' => 'odm_default',
                 'eventmanager' => 'odm_default',
                 'configuration' => 'odm_default',
-                'documentmanager' => 'odm_default',
+                'documentManager' => 'doctrine.documentmanager.odm_default',
             ),
             'activeUser' => 'sds.auth.activeUser',
+            'renderFlushListener' => false,
             'extensionConfigs' => array(
 //                'Sds\DoctrineExtensions\AccessControl' => null,
 //                'Sds\DoctrineExtensions\Accessor' => null,
@@ -43,6 +44,7 @@ return array(
         ),
         'factories' => array(
             'sds.doctrineExtensions.serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory',
+            'sds.doctrineExtensions.renderFlushListener' => 'Sds\DoctrineExtensionsModule\Service\RenderFlushListenerFactory',
         )
     ),
 );

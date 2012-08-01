@@ -72,7 +72,7 @@ class Serializer
      * @param string $className
      * @return object
      */
-    public function fromArray(array $data, $classNameKey = null, $className = null) {
+    public function fromArray(array $data, $classNameKey = '_className', $className = null) {
         return StaticSerializer::fromArray($data, $this->documentManager, $classNameKey, $className);
     }
 
