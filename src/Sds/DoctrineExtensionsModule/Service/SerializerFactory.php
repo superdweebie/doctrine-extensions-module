@@ -5,7 +5,7 @@
  */
 namespace Sds\DoctrineExtensionsModule\Service;
 
-use Sds\DoctrineExtensionsModule\Serializer\Serializer;
+use Sds\DoctrineExtensionsModule\Serializer;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -3,7 +3,7 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\DoctrineExtensionsModule\Serializer;
+namespace Sds\DoctrineExtensionsModule;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Sds\DoctrineExtensions\Serializer\Serializer as StaticSerializer;
