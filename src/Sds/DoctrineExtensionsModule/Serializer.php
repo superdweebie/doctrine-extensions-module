@@ -6,6 +6,7 @@
 namespace Sds\DoctrineExtensionsModule;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Sds\Common\Serializer\SerializerInterface;
 use Sds\DoctrineExtensions\Serializer\Serializer as StaticSerializer;
 
 /**
@@ -14,7 +15,7 @@ use Sds\DoctrineExtensions\Serializer\Serializer as StaticSerializer;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class Serializer
+class Serializer implements SerializerInterface
 {
 
     /**
@@ -74,6 +75,10 @@ class Serializer
      */
     public function fromArray(array $data, $classNameKey = '_className', $className = null) {
         return StaticSerializer::fromArray($data, $this->documentManager, $classNameKey, $className);
+    }
+
+    public function fromJson($data, $classNameKey = '_className', $className = null) {
+        return StaticSerializer::fromJson($data, $this->documentManager, $classNameKey, $className);
     }
 
     public function applySerializeMetadataToArray(array $data, $className) {
