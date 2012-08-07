@@ -1,4 +1,5 @@
 {
+    "minimum-stability": "dev",    
     "require": {
         "php": ">=5.4",
         "superdweebie/doctrine-extensions": "dev-master",
