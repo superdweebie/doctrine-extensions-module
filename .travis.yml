@@ -5,8 +5,8 @@ php:
 
 before_script:
   - wget http://pecl.php.net/get/mongo-1.2.10.tgz
-  - tar -xzf mongo-1.2.10.tgz
-  - sh -c "cd mongo-1.2.10 && phpize && ./configure --enable-mongo && make && sudo make install"
+  - tar -xzf mongo-1.2.12.tgz
+  - sh -c "cd mongo-1.2.12 && phpize && ./configure --enable-mongo && make && sudo make install"
   - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - git submodule update --init
   - cd ..
@@ -14,15 +14,13 @@ before_script:
   - cd ZendSkeletonApplication
   - rm .gitmodules
   - git rm --cached vendor/ZF2
-  - cp ../doctrineExtensionsModule/tests/composer.json ./
+  - cp ../doctrineExtensionsModule/.travis/composer.json ./
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
   - rm -rf vendor/superdweebie/doctrine-extensions-module
   - cp -r ../doctrineExtensionsModule vendor/superdweebie/
   - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
   - rm config/application.config.php
-  - cp ../doctrineExtensionsModule/tests/TestConfiguration.php.dist config/
-  - mv config/TestConfiguration.php.dist config/application.config.php  
   - mkdir public/js/dojo_src
 
 script:
