@@ -11,6 +11,7 @@ class ModuleTest extends AbstractTest{
     }
 
     protected function alterConfig(array $config) {
+        $config['sds']['doctrineExtensions']['activeUser'] = 'testActiveUser';
         $config['sds']['doctrineExtensions']['extensionConfigs'] = array(
             'Sds\DoctrineExtensions\AccessControl' => null,
             'Sds\DoctrineExtensions\Accessor' => null,
