@@ -21,6 +21,8 @@ before_script:
   - cp -r ../doctrineExtensionsModule vendor/superdweebie/
   - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
   - rm config/application.config.php
+  - cp ../doctrineExtensionsModule/tests/test.application.config.php.dist config/
+  - mv config/test.application.config.php.dist config/application.config.php 
   - mkdir public/js/dojo_src
 
 script:
