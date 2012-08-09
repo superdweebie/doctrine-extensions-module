@@ -40,12 +40,12 @@ class Module
         $serviceManager = $application->getServiceManager();
         $config = $serviceManager->get('Config')['sds']['doctrineExtensions'];
         $eventManager = $application->getEventManager();
-            
+
         // Attach to onRender for flush
         if ($config['renderFlushListener']) {
             $eventManager->attach($serviceManager->get('sds.doctrineExtensions.renderFlushListener'));
         }
-        
+
         // Attach to helper set event and load the document manager helper.
         $eventManager->getSharedManager()->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
     }
@@ -106,11 +106,6 @@ class Module
         //Inject subscribers
         foreach ($manifest->getSubscribers() as $subscriber) {
             $doctrineConfig['eventmanager'][$extensionsConfig['doctrine']['eventmanager']]['subscribers'][] = $subscriber;
-        }
-
-        //Inject annotations
-        foreach ($manifest->getAnnotations() as $namespace => $path) {
-            $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['annotations'][$namespace] = $path;
         }
 
         //Inject filters
