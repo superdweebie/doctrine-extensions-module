@@ -2,10 +2,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "superdweebie/doctrine-extensions": "dev-master",
-        "superdweebie/doctrine-extensions-module": "dev-master",
-        "superdweebie/module-unit-tester": "dev-master",
-        "doctrine/doctrine-mongo-odm-module": "dev-master"
+        "superdweebie/doctrine-extensions-module": "dev-master"
     },
     "autoload": {
         "psr-0": {
