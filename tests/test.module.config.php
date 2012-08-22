@@ -10,6 +10,14 @@ return array(
                 'Sds\DoctrineExtensions\Audit' => null,
                 'Sds\DoctrineExtensions\Crypt' => null,
                 'Sds\DoctrineExtensions\DoNotHardDelete' => null,
+                'Sds\DoctrineExtensions\DojoModel' => array(
+                    'destPaths' => array(
+                        'all' => array(
+                            'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',
+                            'path' => 'data/dojoModels'
+                        ),
+                    ),
+                ),
                 'Sds\DoctrineExtensions\Freeze' => null,
                 'Sds\DoctrineExtensions\Readonly' => null,
                 'Sds\DoctrineExtensions\Serializer' => null,
