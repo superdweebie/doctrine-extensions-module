@@ -7,26 +7,6 @@ use Sds\ModuleUnitTester\AbstractTest;
 
 class SerializerTest extends AbstractTest{
 
-    public function setUp(){
-        parent::setUp();
-    }
-
-    protected function alterConfig(array $config) {
-        $config['sds']['doctrineExtensions']['activeUser'] = 'testActiveUser';
-        $config['sds']['doctrineExtensions']['extensionConfigs'] = array(
-            'Sds\DoctrineExtensions\Serializer' => null,
-        );
-        $config['doctrine']['driver']['odm_default']['drivers']['Sds\DoctrineExtensionsModule\Test\TestAsset\Document'] = 'test';
-        $config['doctrine']['driver']['test'] = array(
-            'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
-            'paths' => array(
-                __DIR__.'/TestAsset/Document'
-            ),
-        );
-
-        return $config;
-    }
-
     public function testSerializer(){
         $serializer = $this->serviceManager->get('sds.doctrineExtensions.serializer');
 

@@ -1,7 +1,7 @@
 <?php
 return array(
     'sds' => array(
-        'doctrineExtensions' => array(            
+        'doctrineExtensions' => array(
             'doctrine' => array(
                 'driver' => 'odm_default',
                 'eventmanager' => 'odm_default',
@@ -15,7 +15,7 @@ return array(
 //                'Sds\DoctrineExtensions\Accessor' => null,
 //                'Sds\DoctrineExtensions\Annotation' => null,
 //                'Sds\DoctrineExtensions\Audit' => null,
-//                'Sds\DoctrineExtensions\DiscriminatorMap' => null,
+//                'Sds\DoctrineExtensions\Crypt' => null,
 //                'Sds\DoctrineExtensions\DojoModel' => array(
 //                    'destPaths' => array(
 //                        'all' => array(
