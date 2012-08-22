@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Sds\\DoctrineExtensionsModule\\Test": "vendor/doctrine-extensions-module/tests"
+            "Sds\\DoctrineExtensionsModule\\Test": "vendor/superdweebie/doctrine-extensions-module/tests"
         }
     }
 }
