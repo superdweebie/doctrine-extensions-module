@@ -21,6 +21,9 @@ before_script:
   - cp -r ../doctrineExtensionsModule vendor/superdweebie/
   - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
   - mkdir public/js/dojo_src
+  - rm config/application.config.php
+  - cp ../doctrineExtensionsModule/tests/test.application.config.php config/
+  - mv config/test.application.config.php config/application.config.php
 
 script:
   - ./vendor/bin/doctrine-module odm:generate:dojoModels
