@@ -14,7 +14,7 @@ return array(
                     'destPaths' => array(
                         'all' => array(
                             'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',
-                            'path' => 'data/dojoModels'
+                            'path' => 'data'
                         ),
                     ),
                 ),
