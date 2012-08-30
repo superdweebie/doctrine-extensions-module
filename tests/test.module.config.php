@@ -24,7 +24,6 @@ return array(
                 'Sds\DoctrineExtensions\SoftDelete' => null,
                 'Sds\DoctrineExtensions\Stamp' => null,
                 'Sds\DoctrineExtensions\State' => null,
-                'Sds\DoctrineExtensions\UiHints' => null,
                 'Sds\DoctrineExtensions\Validator' => null,
                 'Sds\DoctrineExtensions\Workflow' => null,
                 'Sds\DoctrineExtensions\Zone' => null,
