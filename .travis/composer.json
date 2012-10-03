@@ -1,8 +1,8 @@
 {
     "minimum-stability": "dev",
-    "require": {
-        "php": ">=5.4",
-        "superdweebie/doctrine-extensions-module": "dev-master"
+    "require": {        
+        "superdweebie/doctrine-extensions-module": "dev-master",
+        "zendframework/zendframework": "dev-master"
     },
     "autoload": {
         "psr-0": {
