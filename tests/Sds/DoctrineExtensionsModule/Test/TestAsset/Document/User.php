@@ -18,7 +18,7 @@ class User {
 
     /**
      * @ODM\Field(type="string")
-     * @Sds\DoNotSerialize
+     * @Sds\Serializer(@Sds\Ignore)
      */
     protected $password;
 
