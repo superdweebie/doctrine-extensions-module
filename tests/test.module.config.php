@@ -2,7 +2,6 @@
 return array(
     'sds' => array(
         'doctrineExtensions' => array(
-            'activeUser' => 'testActiveUser',
             'extensionConfigs' => array(
                 'Sds\DoctrineExtensions\AccessControl' => null,
                 'Sds\DoctrineExtensions\Accessor' => null,
@@ -44,10 +43,5 @@ return array(
                 ),
             )
         )
-    ),
-    'service_manager' => array(
-        'invokables' => array(
-            'testActiveUser' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\ActiveUser'
-        ),
     ),
 );

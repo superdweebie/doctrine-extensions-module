@@ -8,7 +8,6 @@ return array(
                 'configuration' => 'odm_default',
                 'documentManager' => 'doctrine.documentmanager.odm_default',
             ),
-            'activeUser' => 'sds.auth.activeUser',
             'renderFlushListener' => false,
             'extensionConfigs' => array(
 //                'Sds\DoctrineExtensions\AccessControl' => null,

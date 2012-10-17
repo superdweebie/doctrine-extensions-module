@@ -92,12 +92,8 @@ class Module
             'ExtensionConfigs' => $extensionsConfig['extensionConfigs']
         );
 
-        if (isset($extensionsConfig['activeUser'])) {
-            if (is_string($extensionsConfig['activeUser'])) {
-                $manifestConfig['activeUser'] = $serviceLocator->get($extensionsConfig['activeUser']);
-            } else {
-                $manifestConfig['activeUser'] = $extensionsConfig['activeUser'];
-            }
+        if ($serviceLocator->has('Zend\Authentication\AuthenticationService')){
+            $manifestConfig['activeUser'] = $serviceLocator->get('Zend\Authentication\AuthenticationService')->getIdentity();
         }
 
         $manifest = new Manifest(new ManifestConfig($manifestConfig));
