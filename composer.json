@@ -20,9 +20,6 @@
         "superdweebie/module-unit-tester": "dev-master",
         "doctrine/doctrine-mongo-odm-module": "dev-master"
     },
-    "suggest": {
-        "superdweebie/auth-module": "Sds\\AuthModule this is the default configured provider of the activeUser"
-    },
     "autoload": {
         "psr-0": {
             "Sds\\DoctrineExtensionsModule": "src/"

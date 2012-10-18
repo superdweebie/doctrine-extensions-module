@@ -92,10 +92,6 @@ class Module
             'ExtensionConfigs' => $extensionsConfig['extensionConfigs']
         );
 
-        if ($serviceLocator->has('Zend\Authentication\AuthenticationService')){
-            $manifestConfig['activeUser'] = $serviceLocator->get('Zend\Authentication\AuthenticationService')->getIdentity();
-        }
-
         $manifest = new Manifest(new ManifestConfig($manifestConfig));
         $this->manifest = $manifest;
 
@@ -127,6 +123,10 @@ class Module
         $serviceLocator->setAllowOverride(true);
         $serviceLocator->setService('Config', $config);
         $serviceLocator->setAllowOverride($allowOverride);
+
+        if ($serviceLocator->has('Zend\Authentication\AuthenticationService')){
+            $manifest->setIdentity($serviceLocator->get('Zend\Authentication\AuthenticationService')->getIdentity());
+        }
     }
 
     public function getConfig()
