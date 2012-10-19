@@ -9,7 +9,6 @@ namespace Sds\DoctrineExtensionsModule;
 use Doctrine\Common\Annotations;
 use Sds\DoctrineExtensions\Manifest;
 use Sds\DoctrineExtensions\ManifestConfig;
-use Sds\DoctrineExtensionsModule\RenderFlushListener;
 use Zend\EventManager\Event;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;

@@ -39,11 +39,11 @@ return array(
     ),
     'service_manager' => array(
         'invokables' => array(
-            'sds.doctrineExtensions.validator' => 'Sds\DoctrineExtensions\Validator\DocumentValidator',
+            'Sds\DoctrineExtensions\DocumentValidator' => 'Sds\DoctrineExtensions\Validator\DocumentValidator',
         ),
         'factories' => array(
-            'sds.doctrineExtensions.serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory',
-            'sds.doctrineExtensions.renderFlushListener' => 'Sds\DoctrineExtensionsModule\Service\RenderFlushListenerFactory',
+            'Sds\DoctrineExtensions\Serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory',
+            'Sds\DoctrineExtensions\RenderFlushListener' => 'Sds\DoctrineExtensionsModule\Service\RenderFlushListenerFactory',
         )
     ),
 );
