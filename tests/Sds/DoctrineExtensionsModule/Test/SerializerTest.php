@@ -8,7 +8,7 @@ use Sds\ModuleUnitTester\AbstractTest;
 class SerializerTest extends AbstractTest{
 
     public function testSerializer(){
-        $serializer = $this->serviceManager->get('sds.doctrineExtensions.serializer');
+        $serializer = $this->serviceManager->get('Sds\DoctrineExtensions\Serializer');
 
         $user = new User();
         $user->defineLocation('here');
