@@ -9,7 +9,7 @@ return array(
                 'Sds\DoctrineExtensions\Audit' => null,
                 'Sds\DoctrineExtensions\Crypt' => null,
                 'Sds\DoctrineExtensions\DoNotHardDelete' => null,
-                'Sds\DoctrineExtensions\DojoModel' => array(
+                'Sds\DoctrineExtensions\Dojo' => array(
                     'destPaths' => array(
                         'all' => array(
                             'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',

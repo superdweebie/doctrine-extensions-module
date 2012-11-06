@@ -11,5 +11,5 @@ This integrates doctrineExtensions with DoctrineMongoODMModule. Extensions can b
 Access Dojo Model generation from the Doctrine command line as following
 
 ```sh
-./vendor/bin/doctrine-module odm:generate:dojoModels
+./vendor/bin/doctrine-module odm:generate:dojo
 ```

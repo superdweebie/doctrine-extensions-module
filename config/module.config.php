@@ -15,7 +15,7 @@ return array(
 //                'Sds\DoctrineExtensions\Annotation' => null,
 //                'Sds\DoctrineExtensions\Audit' => null,
 //                'Sds\DoctrineExtensions\Crypt' => null,
-//                'Sds\DoctrineExtensions\DojoModel' => array(
+//                'Sds\DoctrineExtensions\Dojo' => array(
 //                    'destPaths' => array(
 //                        'all' => array(
 //                            'filter' => '',
