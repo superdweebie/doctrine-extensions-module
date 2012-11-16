@@ -26,10 +26,24 @@ return array(
                 'Sds\DoctrineExtensions\Validator' => null,
                 'Sds\DoctrineExtensions\Workflow' => null,
                 'Sds\DoctrineExtensions\Zone' => null,
-            )
+            ),
+            'test' => [
+                'jsonRestfulControllerOptions' => [
+                    'documentManager' => 'doctrine.documentmanager.odm_default',
+                    'documentValidator' => 'Sds\DoctrineExtensions\DocumentValidator',
+                    'serializer' => 'Sds\DoctrineExtensions\Serializer',
+                    'documentClass' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game',
+                    'limit' => 30 //max number of records returned from getList
+                ]
+            ]
         )
     ),
     'doctrine' => array(
+        'configuration' => array(
+            'odm_default' => array(
+                'default_db' => 'doctrineExtensionsModuleTest'
+            )
+        ),
         'driver' => array(
             'odm_default' => array(
                 'drivers' => array(
@@ -43,5 +57,12 @@ return array(
                 ),
             )
         )
+    ),
+    'controllers' => array(
+        'factories' => array(
+            'Sds\DoctrineExtensionsModule\Test\TestAsset\JsonRestfulController' => function($serviceLocator){
+        return new Sds\DoctrineExtensionsModule\Controller\JsonRestfulController($serviceLocator->getServiceLocator()->get('Config')['sds']['doctrineExtensions']['test']['jsonRestfulControllerOptions']);
+            }
+        ),
     ),
 );
