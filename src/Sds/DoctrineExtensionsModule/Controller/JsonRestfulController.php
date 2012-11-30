@@ -8,7 +8,7 @@ namespace Sds\DoctrineExtensionsModule\Controller;
 use Sds\DoctrineExtensions\Accessor\Accessor;
 use Sds\DoctrineExtensionsModule\Exception\InvalidArgumentException;
 use Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException;
-use Sds\DoctrineExtensionsModule\Options\AbstractJsonRestfulController as Options;
+use Sds\DoctrineExtensionsModule\Options\JsonRestfulController as Options;
 use Sds\JsonController\AbstractJsonRestfulController;
 use Zend\Http\Header\ContentRange;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -117,8 +117,9 @@ class JsonRestfulController extends AbstractJsonRestfulController
         $serializer = $this->options->getSerializer();
 
         $document = $serializer->fromArray($data, null, $class);
-        $validatorResult = $this->options->getDocumentValidator()
-            ->isValid($document, $documentManager->getClassMetadata($class));
+        $documentValidator = $this->options->getDocumentValidator();
+        $documentValidator->setDocumentManager($documentManager);
+        $validatorResult = $documentValidator->isValid($document, $documentManager->getClassMetadata($class));
 
         if ( ! $validatorResult->getResult()){
             throw new InvalidArgumentException(implode(', ', $validatorResult->getMessages()));
@@ -149,8 +150,9 @@ class JsonRestfulController extends AbstractJsonRestfulController
             $document->$setter($value);
         }
 
-        $validatorResult = $this->options->getDocumentValidator()
-            ->isValid($document, $metadata);
+        $documentValidator = $this->options->getDocumentValidator();
+        $documentValidator->setDocumentManager($documentManager);
+        $validatorResult = $documentValidator->isValid($document, $metadata);
 
         if ( ! $validatorResult->getResult()) {
             $documentManager->detach($document);

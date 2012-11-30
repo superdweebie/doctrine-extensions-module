@@ -14,7 +14,7 @@ use Zend\Stdlib\AbstractOptions;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AbstractJsonRestfulController extends AbstractOptions
+class JsonRestfulController extends AbstractOptions
 {
 
     protected $serviceLocator;
