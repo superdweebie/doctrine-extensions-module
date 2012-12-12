@@ -41,7 +41,9 @@ return array(
     'doctrine' => array(
         'configuration' => array(
             'odm_default' => array(
-                'default_db' => 'doctrineExtensionsModuleTest'
+                'default_db' => 'doctrineExtensionsModuleTest',
+                'proxy_dir'    => __DIR__ . '/Proxy',
+                'hydrator_dir' => __DIR__ . '/Hydrator',
             )
         ),
         'driver' => array(
