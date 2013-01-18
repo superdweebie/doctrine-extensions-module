@@ -60,10 +60,8 @@ return [
     'router' => [
         'routes' => [
             // Rest api route
-            'Sds\DoctrineExtensions\Rest' => [
-                'type' => 'Sds\DoctrineExtensionsModule\RestRoute',
+            'Sds\Zf2ExtensionsModule\RestRoute' => [
                 'options' => [
-                    'route' => '/api',
                     'defaults' => [
                         'controller' => 'Sds\DoctrineExtensionsModule\Controller\JsonRestfulController'
                     ],

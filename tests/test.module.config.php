@@ -72,7 +72,7 @@ return [
 
     'router' => [
         'routes' => [
-            'Sds\DoctrineExtensions\Rest' => [
+            'Sds\Zf2ExtensionsModule\RestRoute' => [
                 'options' => [
                     'endpointToControllerMap' => [
                         'road' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\RoadController'

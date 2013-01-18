@@ -1,6 +1,6 @@
 <?php
 
-namespace Sds\ModuleUnitTester\BaseTest;
+namespace Sds\DoctrineExtensionsModule\Test;
 
 use Sds\DoctrineExtensionsModule\Test\TestAsset\Document\City;
 use Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Road;
@@ -10,7 +10,7 @@ use Zend\Console\Console;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 
-class RestRouterControllerIntegrationTest extends AbstractTest{
+class RestRouteControllerIntegrationTest extends AbstractTest{
 
     public function setUp(){
 

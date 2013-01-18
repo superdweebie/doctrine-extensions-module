@@ -9,7 +9,7 @@ use Sds\DoctrineExtensions\Accessor\Accessor;
 use Sds\DoctrineExtensionsModule\Exception\InvalidArgumentException;
 use Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException;
 use Sds\DoctrineExtensionsModule\Options\JsonRestfulController as Options;
-use Sds\JsonController\AbstractJsonRestfulController;
+use Sds\Zf2ExtensionsModule\Controller\AbstractJsonRestfulController;
 use Zend\Http\Header\ContentRange;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

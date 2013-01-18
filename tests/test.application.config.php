@@ -3,6 +3,7 @@ return array(
     'modules' => array(
         'DoctrineModule',
         'DoctrineMongoODMModule',
+        'Sds\Zf2ExtensionsModule',
         'Sds\DoctrineExtensionsModule'
     ),
     'module_listener_options' => array(
