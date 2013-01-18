@@ -2,7 +2,6 @@
 
 namespace Sds\DoctrineExtensionsModule\Test\TestAsset\Document;
 
-use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /** @ODM\EmbeddedDocument */

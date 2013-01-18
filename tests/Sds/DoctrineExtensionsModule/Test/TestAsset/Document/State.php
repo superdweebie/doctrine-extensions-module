@@ -2,7 +2,8 @@
 
 namespace Sds\DoctrineExtensionsModule\Test\TestAsset\Document;
 
-//Annotation imports
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
@@ -10,23 +11,17 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
  * @ODM\Document
  * @Sds\Rest
  */
-class Game {
-
+class State
+{
     /**
-     * @ODM\Id(strategy="NONE")
+     * @ODM\Id(strategy="none")
      */
     protected $name;
 
     /**
-     * @ODM\String
-     * @Sds\Validator\Required
+     * @ODM\ReferenceMany(targetDocument="City", mappedBy="states")
      */
-    protected $type;
-
-    public function __construct($name, $type) {
-        $this->name = $name;
-        $this->type = $type;
-    }
+    protected $cities;
 
     public function getName() {
         return $this->name;
@@ -36,11 +31,12 @@ class Game {
         $this->name = $name;
     }
 
-    public function getType() {
-        return $this->type;
+    public function getCities() {
+        return $this->cities;
     }
 
-    public function setType($type) {
-        $this->type = $type;
+    public function __construct($name){
+        $this->name = $name;
+        $this->cities = new ArrayCollection();
     }
 }

@@ -40,11 +40,6 @@ class Module
         $config = $serviceManager->get('Config')['sds']['doctrineExtensions'];
         $eventManager = $application->getEventManager();
 
-        // Attach to onRender for flush
-        if ($config['renderFlushListener']) {
-            $eventManager->attach($serviceManager->get('sds.doctrineExtensions.renderFlushListener'));
-        }
-
         // Attach to helper set event and load the document manager helper.
         $eventManager->getSharedManager()->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
     }
@@ -78,6 +73,13 @@ class Module
             $cacheName = 'doctrine.cache'.$doctrineConfig[$extensionsConfig['doctrine']['configuration']]['metadataCache'];
         } else {
             $cacheName = 'doctrine.cache.array';
+        }
+
+        //set the base path for rest api if not given
+        if (array_key_exists('Sds\DoctrineExtensions\Rest', $extensionsConfig['extensionConfigs']) &&
+            !isset($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'])
+        ){
+            $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'] = $serviceLocator->get('request')->getBaseUrl() . $config['router']['routes']['Sds\DoctrineExtensions\Rest']['options']['route'];
         }
 
         $reader = new Annotations\AnnotationReader;

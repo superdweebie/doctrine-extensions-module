@@ -1,31 +1,31 @@
 <?php
-return array(
-    'sds' => array(
-        'doctrineExtensions' => array(
-            'doctrine' => array(
+return [
+    'sds' => [
+        'doctrineExtensions' => [
+            'doctrine' => [
                 'driver' => 'odm_default',
                 'eventmanager' => 'odm_default',
                 'configuration' => 'odm_default',
                 'documentManager' => 'doctrine.documentmanager.odm_default',
-            ),
-            'renderFlushListener' => false,
-            'extensionConfigs' => array(
+            ],
+            'extensionConfigs' => [
 //                'Sds\DoctrineExtensions\AccessControl' => null,
 //                'Sds\DoctrineExtensions\Accessor' => null,
 //                'Sds\DoctrineExtensions\Annotation' => null,
 //                'Sds\DoctrineExtensions\Audit' => null,
 //                'Sds\DoctrineExtensions\Crypt' => null,
-//                'Sds\DoctrineExtensions\Dojo' => array(
-//                    'destPaths' => array(
-//                        'all' => array(
+//                'Sds\DoctrineExtensions\Dojo' => [
+//                    'destPaths' => [
+//                        'all' => [
 //                            'filter' => '',
 //                            'path' => 'public/js/dojo_src'
-//                        ),
-//                    ),
-//                ),
+//                        ],
+//                    ],
+//                ],
 //                'Sds\DoctrineExtensions\DoNotHardDelete' => null,
 //                'Sds\DoctrineExtensions\Freeze' => null,
 //                'Sds\DoctrineExtensions\Readonly' => null,
+//                'Sds\DoctrineExtensions\Rest' => null,
 //                'Sds\DoctrineExtensions\Serializer' => null,
 //                'Sds\DoctrineExtensions\SoftDelete' => null,
 //                'Sds\DoctrineExtensions\Stamp' => null,
@@ -34,16 +34,41 @@ return array(
 //                'Sds\DoctrineExtensions\Validator' => null,
 //                'Sds\DoctrineExtensions\Workflow' => null,
 //                'Sds\DoctrineExtensions\Zone' => null,
-            ),
-        ),
-    ),
-    'service_manager' => array(
-        'invokables' => array(
+            ],
+        ],
+    ],
+
+    'service_manager' => [
+        'invokables' => [
             'Sds\DoctrineExtensions\DocumentValidator' => 'Sds\DoctrineExtensions\Validator\DocumentValidator',
-        ),
-        'factories' => array(
+        ],
+        'factories' => [
             'Sds\DoctrineExtensions\Serializer' => 'Sds\DoctrineExtensionsModule\Service\SerializerFactory',
-            'Sds\DoctrineExtensions\RenderFlushListener' => 'Sds\DoctrineExtensionsModule\Service\RenderFlushListenerFactory',
-        )
-    ),
-);
+        ],
+    ],
+
+    'controllers' => [
+        'factories' => [
+            'Sds\DoctrineExtensionsModule\Controller\JsonRestfulController' => function($serviceLocator){
+                return new Sds\DoctrineExtensionsModule\Controller\JsonRestfulController(
+                    ['restEndpoint' => $serviceLocator->getServiceLocator()->get('application')->getMvcEvent()->getRouteMatch()->getParam('restEndpoint')]
+                );
+            },
+        ],
+    ],
+
+    'router' => [
+        'routes' => [
+            // Rest api route
+            'Sds\DoctrineExtensions\Rest' => [
+                'type' => 'Sds\DoctrineExtensionsModule\RestRoute',
+                'options' => [
+                    'route' => '/api',
+                    'defaults' => [
+                        'controller' => 'Sds\DoctrineExtensionsModule\Controller\JsonRestfulController'
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

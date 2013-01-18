@@ -7,7 +7,7 @@ use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Request;
 
-class JsonRestfulControllerTest extends AbstractControllerTest{
+class JsonRestfulControllerDocumentClassTest extends AbstractControllerTest{
 
     protected static $staticDcumentManager;
 
@@ -23,7 +23,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
 
     public function setUp(){
 
-        $this->controllerName = 'Sds\DoctrineExtensionsModule\Test\TestAsset\JsonRestfulController';
+        $this->controllerName = 'Sds\DoctrineExtensionsModule\Test\TestAsset\GameController';
 
         parent::setUp();
 
@@ -48,7 +48,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->routeMatch->setParam('id', 'dweebies');
         $this->request->setMethod(Request::METHOD_GET);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('dweebies', $returnArray['name']);
@@ -62,14 +62,14 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->routeMatch->setParam('id', 'monpoly');
         $this->request->setMethod(Request::METHOD_GET);
 
-        $this->controller->dispatch($this->request, $this->response);
+        $this->getController()->dispatch($this->request, $this->response);
     }
 
     public function testGetList(){
 
         $this->request->setMethod(Request::METHOD_GET);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertCount(4, $returnArray);
@@ -81,7 +81,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->getQuery()->set('sort(+type,+name)', null);
         $this->request->setMethod(Request::METHOD_GET);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertCount(4, $returnArray);
@@ -97,7 +97,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->getHeaders()->addHeader(GenericHeader::fromString('Range: items=2-100'));
         $this->request->setMethod(Request::METHOD_GET);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertCount(2, $returnArray);
@@ -109,7 +109,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"name": "forbiddenIsland", "type": "co-op"}');
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('forbiddenIsland', $returnArray['name']);
@@ -123,7 +123,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"name": "missingType"}');
 
-        $this->controller->dispatch($this->request, $this->response);
+        $this->getController()->dispatch($this->request, $this->response);
     }
 
     public function testUpdate(){
@@ -133,7 +133,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_PUT);
         $this->request->setContent('{"type": "board"}');
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('forbiddenIsland', $returnArray['name']);
@@ -149,7 +149,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_PUT);
         $this->request->setContent('{"type": null}');
 
-        $this->controller->dispatch($this->request, $this->response);
+        $this->getController()->dispatch($this->request, $this->response);
     }
 
     public function testDelete(){
@@ -157,7 +157,7 @@ class JsonRestfulControllerTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_DELETE);
         $this->routeMatch->setParam('id', 'dweebies');
 
-        $this->controller->dispatch($this->request, $this->response);
+        $this->getController()->dispatch($this->request, $this->response);
 
         $game = $this->documentManager
             ->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')

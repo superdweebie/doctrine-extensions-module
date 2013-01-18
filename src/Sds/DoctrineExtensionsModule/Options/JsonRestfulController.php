@@ -19,15 +19,17 @@ class JsonRestfulController extends AbstractOptions
 
     protected $serviceLocator;
 
-    protected $serializer;
+    protected $serializer = 'Sds\DoctrineExtensions\Serializer';
 
-    protected $documentValidator;
+    protected $documentValidator = 'Sds\DoctrineExtensions\DocumentValidator';
 
     protected $documentManager;
 
     protected $documentClass;
 
-    protected $limit;
+    protected $restEndpoint; //can be used instead of documentClass. The @Sds/Rest annotation will be used to look up the correct document class.
+
+    protected $limit = '30';
 
     public function getServiceLocator() {
         return $this->serviceLocator;
@@ -68,6 +70,9 @@ class JsonRestfulController extends AbstractOptions
     }
 
     public function getDocumentManager() {
+        if (!isset($this->documentManager)){
+            $this->documentManager = $this->serviceLocator->get('config')['sds']['doctrineExtensions']['doctrine']['documentManager'];
+        }
         if (is_string($this->documentManager)) {
             $this->documentManager = $this->serviceLocator->get($this->documentManager);
         }
@@ -79,11 +84,30 @@ class JsonRestfulController extends AbstractOptions
     }
 
     public function getDocumentClass() {
+
+        if (! isset($this->documentClass) && isset($this->restEndpoint)){
+            //attempt to get the document class by looking up the @Sds/Rest endpoint
+            $documentManager = $this->getDocumentManager();
+            foreach($documentManager->getMetadataFactory()->getAllMetadata() as $metadata){
+                if (isset($metadata->rest) && $metadata->rest['endpoint'] == $this->restEndpoint){
+                    $this->documentClass = $metadata->name;
+                    break;
+                }
+            }
+        }
         return $this->documentClass;
     }
 
     public function setDocumentClass($documentClass) {
         $this->documentClass = (string) $documentClass;
+    }
+
+    public function getRestEndpoint() {
+        return $this->restEndpoint;
+    }
+
+    public function setRestEndpoint($restEndpoint) {
+        $this->restEndpoint = (string) $restEndpoint;
     }
 
     public function getLimit() {

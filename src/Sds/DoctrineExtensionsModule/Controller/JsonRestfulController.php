@@ -50,8 +50,14 @@ class JsonRestfulController extends AbstractJsonRestfulController
 
         $queryBuilder = $this->options->getDocumentManager()->createQueryBuilder();
 
-        $total = $queryBuilder
-            ->find($this->options->getDocumentClass())
+        $totalQuery = $queryBuilder
+            ->find($this->options->getDocumentClass());
+
+        foreach($this->getCriteria() as $field => $value){
+            $totalQuery->field($field)->equals($value);
+        }
+
+        $total = $totalQuery
             ->getQuery()
             ->execute()
             ->count();
@@ -62,7 +68,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
             ->find($this->options->getDocumentClass());
 
         foreach($this->getCriteria() as $field => $value){
-            $resultsQuery->find($field)->equals($value);
+            $resultsQuery->field($field)->equals($value);
         }
 
         $resultsQuery
@@ -206,9 +212,10 @@ class JsonRestfulController extends AbstractJsonRestfulController
     protected function getCriteria(){
 
         $result = [];
-
+        $metadata = $this->options->getDocumentManager()->getClassMetadata($this->options->getDocumentClass());
         foreach ($this->request->getQuery() as $key => $value){
-            if (isset($value)){
+            //ignore criteria that null and for fields that don't exist
+            if (isset($value) && array_key_exists($key, $metadata->reflFields)){
                 $result[$key] = $value;
             }
         }
