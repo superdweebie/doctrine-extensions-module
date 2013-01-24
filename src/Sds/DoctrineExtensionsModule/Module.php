@@ -57,7 +57,7 @@ class Module
             $helperSet->set($helper, $key);
         }
     }
-
+   
     /**
      *
      * @param \Zend\EventManager\Event $event
@@ -79,7 +79,7 @@ class Module
         if (array_key_exists('Sds\DoctrineExtensions\Rest', $extensionsConfig['extensionConfigs']) &&
             !isset($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'])
         ){
-            $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'] = $serviceLocator->get('request')->getBaseUrl() . $config['router']['routes']['Sds\DoctrineExtensions\Rest']['options']['route'];
+            $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'] = $serviceLocator->get('request')->getBaseUrl() . $this->findRoute($config['router']['routes']);
         }
 
         $reader = new Annotations\AnnotationReader;
@@ -134,4 +134,18 @@ class Module
     {
         return include __DIR__ . '/../../../config/module.config.php';
     }
+    
+    protected function findRoute($configs){                
+        foreach ($configs as $name => $config){
+            if ($name == 'Sds\Zf2ExtensionsModule\RestRoute'){
+                return $config['options']['route'];
+            }
+            if (isset($config['child_routes'])){
+                $route = $this->findRoute($config['child_routes']);
+                if ($route){
+                    return $route;
+                }
+            }
+        }
+    }    
 }

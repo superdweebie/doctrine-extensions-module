@@ -73,11 +73,16 @@ return [
     'router' => [
         'routes' => [
             'Sds\Zf2ExtensionsModule\RestRoute' => [
+                'type' => 'Sds\Zf2ExtensionsModule\RestRoute',                
                 'options' => [
+                    'route' => '/api', 
+                    'defaults' => [
+                        'controller' => 'Sds\DoctrineExtensionsModule\Controller\JsonRestfulController'
+                    ],                       
                     'endpointToControllerMap' => [
                         'road' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\RoadController'
                     ],
-                ],
+                ],             
             ],
         ],
     ],

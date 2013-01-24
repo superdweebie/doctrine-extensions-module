@@ -78,7 +78,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
         foreach($this->getSort() as $sort){
             $resultsQuery->sort($sort['field'], $sort['direction']);
         }
-
+       
         $resultsCursor = $resultsQuery
             ->eagerCursor(true)
             ->getQuery()
@@ -92,7 +92,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
 
         $this->response->getHeaders()->addHeader(ContentRange::fromString("Content-Range: $offset-$max/$total"));
 
-        return $results;
+        return $this->model->setVariables($results);
     }
 
     public function get($id){
@@ -113,7 +113,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
             throw new DocumentNotFoundException(sprintf('Document with id %s could not be found in the database', $id));
         }
 
-        return $this->options->getSerializer()->applySerializeMetadataToArray($result, $class);
+        return $this->model->setVariables($this->options->getSerializer()->applySerializeMetadataToArray($result, $class));
     }
 
     public function create($data){
@@ -134,7 +134,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
         $documentManager->persist($document);
         $documentManager->flush();
 
-        return $serializer->toArray($document);
+        return $this->model->setVariables($serializer->toArray($document));
     }
 
     public function update($id, $data){
@@ -167,7 +167,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
 
         $documentManager->flush();
 
-        return $this->options->getSerializer()->toArray($document);
+        return $this->model->setVariables($this->options->getSerializer()->toArray($document));
     }
 
     public function delete($id){
