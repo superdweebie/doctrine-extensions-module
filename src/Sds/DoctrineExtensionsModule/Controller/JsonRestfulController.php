@@ -62,6 +62,11 @@ class JsonRestfulController extends AbstractJsonRestfulController
             ->execute()
             ->count();
 
+        if ($total == 0){
+            $this->response->getHeaders()->addHeader(ContentRange::fromString("Content-Range: 0-0/0"));
+            return $this->model->setVariables([]);            
+        }
+        
         $offset = $this->getOffset();
 
         $resultsQuery = $queryBuilder

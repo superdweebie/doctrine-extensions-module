@@ -102,8 +102,8 @@ class Module
         }
 
         //Inject filters
-        foreach ($manifest->getFilters() as $filter) {
-            $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['filters'][] = $filter;
+        foreach ($manifest->getFilters() as $name => $class) {
+            $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['filters'][$name] = $class;
         }
 
         //inject document paths
