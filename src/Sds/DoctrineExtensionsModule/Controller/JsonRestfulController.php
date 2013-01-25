@@ -231,8 +231,8 @@ class JsonRestfulController extends AbstractJsonRestfulController
     protected function getSort(){
 
         foreach ($this->request->getQuery() as $key => $value){
-            if (substr($key, 0, 4) == 'sort' && ! isset($value)){
-                $sort = $key;
+            if (substr($key, 0, 4) == 'sort' && isset($value)){
+                $sort = $value;
                 break;
             }
         }
@@ -241,7 +241,7 @@ class JsonRestfulController extends AbstractJsonRestfulController
             return [];
         }
 
-        $sortFields = explode(',', str_replace(')', '', str_replace('sort(', '', $sort)));
+        $sortFields = explode(',', str_replace(array('(',')'), '', $sort));
         $return = [];
 
         foreach ($sortFields as $value)
