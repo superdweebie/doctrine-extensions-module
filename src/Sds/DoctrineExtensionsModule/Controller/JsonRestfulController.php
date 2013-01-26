@@ -196,7 +196,8 @@ class JsonRestfulController extends AbstractJsonRestfulController
         if ($range) {
             $values = explode('-', explode('=', $range->getFieldValue())[1]);
             $limit = intval($values[1]) - intval($values[0]) + 1;
-            if ($limit < $this->options->getLimit()) {
+
+            if ($limit < $this->options->getLimit() && $limit != 0) {
                 return $limit;
             }
         }
