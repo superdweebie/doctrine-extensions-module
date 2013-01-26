@@ -79,7 +79,10 @@ class Module
         if (array_key_exists('Sds\DoctrineExtensions\Rest', $extensionsConfig['extensionConfigs']) &&
             !isset($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'])
         ){
-            $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'] = $serviceLocator->get('request')->getBaseUrl() . $this->findRoute($config['router']['routes']);
+            $request = $serviceLocator->get('request');
+            if (method_exists($request, 'getBaseUrl'){
+                $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'] = $request->getBaseUrl() . $this->findRoute($config['router']['routes']);
+            }
         }
 
         $reader = new Annotations\AnnotationReader;
