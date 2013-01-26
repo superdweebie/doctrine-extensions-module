@@ -199,8 +199,6 @@ class JsonRestfulController extends AbstractJsonRestfulController
 
             if ($limit < $this->options->getLimit() && $limit != 0) {
                 return $limit;
-            } else {
-                return $this->options->getLimit();
             }
         }
         return $this->options->getLimit();
