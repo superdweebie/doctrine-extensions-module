@@ -75,7 +75,7 @@ class JsonRestfulControllerEndpointTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertCount(4, $returnArray);
-        $this->assertEquals('Content-Range: 0-4/4', $this->response->getHeaders()->get('Content-Range')->toString());
+        $this->assertEquals('Content-Range: 0-3/4', $this->response->getHeaders()->get('Content-Range')->toString());
     }
 
     public function testGetSortedList(){
@@ -87,7 +87,7 @@ class JsonRestfulControllerEndpointTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertCount(4, $returnArray);
-        $this->assertEquals('Content-Range: 0-4/4', $this->response->getHeaders()->get('Content-Range')->toString());
+        $this->assertEquals('Content-Range: 0-3/4', $this->response->getHeaders()->get('Content-Range')->toString());
         $this->assertEquals('7wonders', $returnArray[0]['name']);
         $this->assertEquals('dweebies', $returnArray[1]['name']);
         $this->assertEquals('monsta', $returnArray[2]['name']);
@@ -103,7 +103,7 @@ class JsonRestfulControllerEndpointTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertCount(2, $returnArray);
-        $this->assertEquals('Content-Range: 2-4/4', $this->response->getHeaders()->get('Content-Range')->toString());
+        $this->assertEquals('Content-Range: 2-3/4', $this->response->getHeaders()->get('Content-Range')->toString());
     }
 
     public function testCreate(){

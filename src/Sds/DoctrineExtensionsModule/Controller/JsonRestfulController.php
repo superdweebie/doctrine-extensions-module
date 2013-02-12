@@ -26,6 +26,8 @@ class JsonRestfulController extends AbstractRestfulController
 
     protected $model;
 
+    protected $range;
+
     protected $acceptCriteria = array(
         'Zend\View\Model\JsonModel' => array(
             'application/json',
@@ -81,11 +83,15 @@ class JsonRestfulController extends AbstractRestfulController
             ->count();
 
         if ($total == 0){
-            $this->response->getHeaders()->addHeader(ContentRange::fromString("Content-Range: 0-0/0"));
+            $this->response->getHeaders()->addHeader(ContentRange::fromString("Content-Range: *-*/0"));
             return $this->model->setVariables([]);
         }
 
         $offset = $this->getOffset();
+
+        if ($offset > $total - 1){
+            $offset = 0;
+        }
 
         $resultsQuery = $queryBuilder
             ->find($this->options->getDocumentClass());
@@ -111,7 +117,7 @@ class JsonRestfulController extends AbstractRestfulController
             $results[] = $this->options->getSerializer()->toArray($result, $this->options->getDocumentClass());
         }
 
-        $max = $offset + count($results);
+        $max = $offset + count($results) - 1;
 
         $this->response->getHeaders()->addHeader(ContentRange::fromString("Content-Range: $offset-$max/$total"));
 
@@ -209,28 +215,40 @@ class JsonRestfulController extends AbstractRestfulController
 
     protected function getLimit(){
 
-        $range = $this->getRequest()->getHeader('Range');
-
-        if ($range) {
-            $values = explode('-', explode('=', $range->getFieldValue())[1]);
-            $limit = intval($values[1]) - intval($values[0]) + 1;
-
-            if ($limit < $this->options->getLimit() && $limit != 0) {
-                return $limit;
-            }
-        }
-        return $this->options->getLimit();
+        list($lower, $upper) = $this->getRange();
+        return $upper - $lower + 1;
     }
 
     protected function getOffset(){
 
-        $range = $this->getRequest()->getHeader('Range');
+        return $this->getRange()[0];
+    }
 
-        if($range){
-            return intval(explode('-', explode('=', $range->getFieldValue())[1])[0]);
-        } else {
-            return 0;
+    protected function getRange(){
+
+        if (isset($this->range)){
+            return $this->range;
         }
+
+        $header = $this->getRequest()->getHeader('Range');
+        $limit = $this->options->getLimit();
+
+        if ($header) {
+            list($lower, $upper) = array_map(
+                function($item){return intval($item);},
+                explode('-', explode('=', $header->getFieldValue())[1])
+            );
+            if ($lower > $upper){
+                list($lower, $upper) = [$upper, $lower];
+            }
+            if ($upper - $lower + 1 > $limit){
+                $upper = $limit - 1;
+            }
+            $this->range = [$lower, $upper];
+        } else {
+            $this->range = [0, $limit - 1];
+        }
+        return $this->range;
     }
 
     protected function getCriteria(){

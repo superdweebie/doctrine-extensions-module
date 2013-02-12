@@ -30,11 +30,18 @@ return [
 //                'Sds\DoctrineExtensions\SoftDelete' => true,
 //                'Sds\DoctrineExtensions\Stamp' => true,
 //                'Sds\DoctrineExtensions\State' => true,
-//                'Sds\DoctrineExtensions\UiHints' => true,
 //                'Sds\DoctrineExtensions\Validator' => true,
 //                'Sds\DoctrineExtensions\Workflow' => true,
 //                'Sds\DoctrineExtensions\Zone' => true,
             ],
+        ],
+    ],
+
+    'doctrine' => [
+        'configuration' => [
+            'odm_default' => [
+                'classMetadataFactoryName' => 'Sds\DoctrineExtensions\ClassMetadataFactory'
+            ]
         ],
     ],
 

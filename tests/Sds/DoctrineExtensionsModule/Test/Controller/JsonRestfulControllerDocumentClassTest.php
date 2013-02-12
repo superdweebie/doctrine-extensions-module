@@ -73,7 +73,7 @@ class JsonRestfulControllerDocumentClassTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertCount(4, $returnArray);
-        $this->assertEquals('Content-Range: 0-4/4', $this->response->getHeaders()->get('Content-Range')->toString());
+        $this->assertEquals('Content-Range: 0-3/4', $this->response->getHeaders()->get('Content-Range')->toString());
     }
 
     public function testGetSortedList(){
@@ -85,7 +85,7 @@ class JsonRestfulControllerDocumentClassTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertCount(4, $returnArray);
-        $this->assertEquals('Content-Range: 0-4/4', $this->response->getHeaders()->get('Content-Range')->toString());
+        $this->assertEquals('Content-Range: 0-3/4', $this->response->getHeaders()->get('Content-Range')->toString());
         $this->assertEquals('7wonders', $returnArray[0]['name']);
         $this->assertEquals('dweebies', $returnArray[1]['name']);
         $this->assertEquals('monsta', $returnArray[2]['name']);
@@ -101,7 +101,30 @@ class JsonRestfulControllerDocumentClassTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertCount(2, $returnArray);
-        $this->assertEquals('Content-Range: 2-4/4', $this->response->getHeaders()->get('Content-Range')->toString());
+        $this->assertEquals('Content-Range: 2-3/4', $this->response->getHeaders()->get('Content-Range')->toString());
+    }
+
+    public function testGetOffsetListReverseRange(){
+
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Range: items=2-0'));
+        $this->request->setMethod(Request::METHOD_GET);
+
+        $result = $this->getController()->dispatch($this->request, $this->response);
+        $returnArray = $result->getVariables();
+
+        $this->assertCount(3, $returnArray);
+        $this->assertEquals('Content-Range: 0-2/4', $this->response->getHeaders()->get('Content-Range')->toString());
+    }
+
+    public function testGetOffsetListBeyondRange(){
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Range: items=100-102'));
+        $this->request->setMethod(Request::METHOD_GET);
+
+        $result = $this->getController()->dispatch($this->request, $this->response);
+        $returnArray = $result->getVariables();
+
+        $this->assertCount(3, $returnArray);
+        $this->assertEquals('Content-Range: 0-2/4', $this->response->getHeaders()->get('Content-Range')->toString());
     }
 
     public function testCreate(){
