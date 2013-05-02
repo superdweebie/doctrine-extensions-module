@@ -1,14 +1,23 @@
 <?php
 
-namespace Sds\ModuleUnitTester\BaseTest;
+namespace Sds\DoctrineExtensionsModule;
 
 use Sds\DoctrineExtensionsModule\Test\TestAsset\Document\User;
-use Sds\ModuleUnitTester\AbstractTest;
+use Zend\Test\PHPUnit\Controller\AbstractControllerTestCase;
 
-class SerializerTest extends AbstractTest{
+class SerializerTest extends AbstractControllerTestCase{
+
+    public function setUp(){
+
+        $this->setApplicationConfig(
+            include __DIR__ . '/../../../test.application.config.php'
+        );
+
+        parent::setUp();
+    }
 
     public function testSerializer(){
-        $serializer = $this->serviceManager->get('Sds\DoctrineExtensions\Serializer');
+        $serializer = $this->getApplicationServiceLocator()->get('Sds\DoctrineExtensions\ServiceManager')->get('serializer');
 
         $user = new User();
         $user->defineLocation('here');
@@ -17,7 +26,7 @@ class SerializerTest extends AbstractTest{
 
         $this->assertEquals('here', $userArray['location']);
 
-        $user = $serializer->fromArray($userArray, null, get_class($user));
+        $user = $serializer->fromArray($userArray, get_class($user));
 
         $this->assertEquals('here', $user->location());
     }

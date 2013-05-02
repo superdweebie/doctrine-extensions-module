@@ -5,38 +5,50 @@
  */
 namespace Sds\DoctrineExtensionsModule\Options;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\AbstractOptions;
-
 /**
  *
  * @since   1.0
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class JsonRestfulController extends AbstractOptions
+class JsonRestfulController extends AbstractController
 {
 
-    protected $serviceLocator;
+    protected $acceptCriteria = [
+        'Zend\View\Model\JsonModel' => [
+            'application/json',
+        ],
+        'Zend\View\Model\ViewModel' => [
+            '*/*',
+        ],
+    ];
 
-    protected $serializer = 'Sds\DoctrineExtensions\Serializer';
+    protected $endpoint;
 
-    protected $documentValidator = 'Sds\DoctrineExtensions\DocumentValidator';
-
-    protected $documentManager;
+    protected $serializer = 'serializer';
 
     protected $documentClass;
 
-    protected $restEndpoint; //can be used instead of documentClass. The @Sds/Rest annotation will be used to look up the correct document class.
-
     protected $limit = '30';
 
-    public function getServiceLocator() {
-        return $this->serviceLocator;
+    protected $exceptionSerializer = 'Sds\ExceptionModule\JsonExceptionStrategy';
+
+    protected $surpressFlush;
+
+    public function getAcceptCriteria() {
+        return $this->acceptCriteria;
     }
 
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
-        $this->serviceLocator = $serviceLocator;
+    public function setAcceptCriteria(array $acceptCriteria) {
+        $this->acceptCriteria = $acceptCriteria;
+    }
+
+    public function getEndpoint() {
+        return $this->endpoint;
+    }
+
+    public function setEndpoint($endpoint) {
+        $this->endpoint = $endpoint;
     }
 
     /**
@@ -49,65 +61,21 @@ class JsonRestfulController extends AbstractOptions
 
     public function getSerializer() {
         if (is_string($this->serializer)) {
-            $this->serializer = $this->serviceLocator->get($this->serializer);
+            if ($this->serviceLocator->has($this->serializer)){
+                $this->serializer = $this->serviceLocator->get($this->serializer);
+            } else {
+                $this->serializer = $this->serviceLocator->get('Sds\DoctrineExtensions\ServiceManager')->get($this->serializer);
+            }
         }
         return $this->serializer;
     }
 
-    public function getDocumentValidator() {
-        if (is_string($this->documentValidator)) {
-            $this->documentValidator = $this->serviceLocator->get($this->documentValidator);
-        }
-        return $this->documentValidator;
-    }
-
-    /**
-     *
-     * @param \Sds\DoctrineExtensions\Validator\DocumentValidatorInterface | string $validator
-     */
-    public function setDocumentValidator($documentValidator) {
-        $this->documentValidator = $documentValidator;
-    }
-
-    public function getDocumentManager() {
-        if (!isset($this->documentManager)){
-            $this->documentManager = $this->serviceLocator->get('config')['sds']['doctrineExtensions']['doctrine']['documentManager'];
-        }
-        if (is_string($this->documentManager)) {
-            $this->documentManager = $this->serviceLocator->get($this->documentManager);
-        }
-        return $this->documentManager;
-    }
-
-    public function setDocumentManager($documentManager) {
-        $this->documentManager = $documentManager;
-    }
-
     public function getDocumentClass() {
-
-        if (! isset($this->documentClass) && isset($this->restEndpoint)){
-            //attempt to get the document class by looking up the @Sds/Rest endpoint
-            $documentManager = $this->getDocumentManager();
-            foreach($documentManager->getMetadataFactory()->getAllMetadata() as $metadata){
-                if (isset($metadata->rest) && $metadata->rest['endpoint'] == $this->restEndpoint){
-                    $this->documentClass = $metadata->name;
-                    break;
-                }
-            }
-        }
         return $this->documentClass;
     }
 
     public function setDocumentClass($documentClass) {
         $this->documentClass = (string) $documentClass;
-    }
-
-    public function getRestEndpoint() {
-        return $this->restEndpoint;
-    }
-
-    public function setRestEndpoint($restEndpoint) {
-        $this->restEndpoint = (string) $restEndpoint;
     }
 
     public function getLimit() {
@@ -116,5 +84,24 @@ class JsonRestfulController extends AbstractOptions
 
     public function setLimit($limit) {
         $this->limit = (int) $limit;
+    }
+
+    public function getExceptionSerializer() {
+        if (is_string($this->exceptionSerializer)) {
+            $this->exceptionSerializer = $this->serviceLocator->get($this->exceptionSerializer);
+        }
+        return $this->exceptionSerializer;
+    }
+
+    public function setExceptionSerializer($exceptionSerializer) {
+        $this->exceptionSerializer = $exceptionSerializer;
+    }
+
+    public function getSurpressFlush() {
+        return $this->surpressFlush;
+    }
+
+    public function setSurpressFlush($surpressFlush) {
+        $this->surpressFlush = (boolean) $surpressFlush;
     }
 }

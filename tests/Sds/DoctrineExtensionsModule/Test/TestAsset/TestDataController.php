@@ -1,0 +1,26 @@
+<?php
+
+namespace Sds\DoctrineExtensionsModule\Test\TestAsset;
+
+use Zend\Mvc\Controller\AbstractActionController;
+
+class TestDataController extends AbstractActionController
+{
+    public function createAction()
+    {
+        TestData::create(
+            $this->serviceLocator->get('doctrine.documentmanager.odm_default')
+        );
+
+        return;
+    }
+
+    public function removeAction()
+    {
+        TestData::remove(
+            $this->serviceLocator->get('doctrine.documentmanager.odm_default')
+        );
+
+        return;
+    }
+}

@@ -8,7 +8,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
-/** @ODM\Document */
+/**
+ * @ODM\Document
+ * @Sds\Rest
+ * @Sds\Permission\Basic(roles="all", allow="all")
+ */
 class User {
 
     /**
@@ -18,7 +22,7 @@ class User {
 
     /**
      * @ODM\Field(type="string")
-     * @Sds\Serializer(@Sds\Ignore)
+     * @Sds\Serializer\Ignore
      */
     protected $password;
 
@@ -31,13 +35,12 @@ class User {
 
     /**
      * @ODM\Field(type="string")
-     * @Sds\Getter("location")
-     * @Sds\Setter("defineLocation")
      */
     protected $location;
 
-    public function __construct()
+    public function __construct($id = null)
     {
+        $this->id = $id;
         $this->groups = new ArrayCollection();
     }
 

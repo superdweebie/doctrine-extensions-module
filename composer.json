@@ -16,14 +16,26 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "superdweebie/doctrine-extensions": "dev-master",
-        "superdweebie/module-unit-tester": "dev-master",
-        "superdweebie/zf2-extensions-module": "dev-master",
-        "doctrine/doctrine-mongo-odm-module": "dev-master"
+        "superdweebie/doctrine-extensions":   "dev-master",
+        "superdweebie/exception-module":      "dev-master",
+        "doctrine/doctrine-mongo-odm-module": "dev-master",
+        "zendframework/zend-servicemanager":  "~2.1",
+        "zendframework/zend-modulemanager":   "~2.1",
+        "zendframework/zend-mvc":             "~2.1",
+        "zendframework/zend-http":            "~2.1",
+        "zendframework/zend-view":            "~2.1",
+        "zendframework/zend-stdlib":          "~2.1"
+    },
+    "require-dev": {
+        "zendframework/zend-test":            "~2.1",
+        "zendframework/zendframework":        "2.1.5"
     },
     "autoload": {
         "psr-0": {
             "Sds\\DoctrineExtensionsModule": "src/"
         }
+    },
+    "config": {
+        "github-protocols": ["http", "https", "git"]
     }
 }

@@ -1,17 +1,14 @@
 <?php
-return array(
-    'modules' => array(
+return [
+    'modules' => [
+        'Sds\ExceptionModule',
         'DoctrineModule',
         'DoctrineMongoODMModule',
-        'Sds\Zf2ExtensionsModule',
         'Sds\DoctrineExtensionsModule'
-    ),
-    'module_listener_options' => array(
-        'config_glob_paths'    => array(
-            'vendor/superdweebie/doctrine-extensions-module/tests/test.module.config.php',
-        ),
-        'module_paths' => array(
-            './vendor',
-        ),
-    ),
-);
+    ],
+    'module_listener_options' => [
+        'config_glob_paths'    => [
+            __DIR__ . '/test.module.config.php',
+        ],
+    ],
+];

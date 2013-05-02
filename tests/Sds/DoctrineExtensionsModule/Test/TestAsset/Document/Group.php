@@ -3,8 +3,12 @@
 namespace Sds\DoctrineExtensionsModule\Test\TestAsset\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
-/** @ODM\EmbeddedDocument */
+/**
+ * @ODM\EmbeddedDocument
+ * @Sds\Permission\Basic(roles="all", allow="all")
+ */
 class Group
 {
     /** @ODM\String */

@@ -1,17 +1,13 @@
 <?php
-
 return [
     'sds' => [
         'doctrineExtensions' => [
             'extensionConfigs' => [
                 'Sds\DoctrineExtensions\AccessControl' => true,
-                'Sds\DoctrineExtensions\Accessor' => true,
                 'Sds\DoctrineExtensions\Annotation' => true,
-                'Sds\DoctrineExtensions\Audit' => true,
                 'Sds\DoctrineExtensions\Crypt' => true,
-                'Sds\DoctrineExtensions\DoNotHardDelete' => true,
                 'Sds\DoctrineExtensions\Dojo' => [
-                    'destPaths' => [
+                    'filePaths' => [
                         'all' => [
                             'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',
                             'path' => 'data'
@@ -20,13 +16,14 @@ return [
                 ],
                 'Sds\DoctrineExtensions\Freeze' => true,
                 'Sds\DoctrineExtensions\Readonly' => true,
-                'Sds\DoctrineExtensions\Rest' => ['basePath' => 'http://test.com/api'],
-                'Sds\DoctrineExtensions\Serializer' => true,
+                'Sds\DoctrineExtensions\Rest' => true,
+                'Sds\DoctrineExtensions\Serializer' => [
+                    'maxNestingDepth' => 2
+                ],
                 'Sds\DoctrineExtensions\SoftDelete' => true,
                 'Sds\DoctrineExtensions\Stamp' => true,
                 'Sds\DoctrineExtensions\State' => true,
                 'Sds\DoctrineExtensions\Validator' => true,
-                'Sds\DoctrineExtensions\Workflow' => true,
                 'Sds\DoctrineExtensions\Zone' => true,
             ],
         ],
@@ -55,35 +52,13 @@ return [
         ],
     ],
 
-    'controllers' => [
-        'factories' => [
-            'Sds\DoctrineExtensionsModule\Test\TestAsset\GameController' => function(){
-                return new Sds\DoctrineExtensionsModule\Controller\JsonRestfulController(
-                    ['documentClass' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game']
-                );
-            },
-            'Sds\DoctrineExtensionsModule\Test\TestAsset\RoadController' => function(){
-                return new Sds\DoctrineExtensionsModule\Controller\JsonRestfulController(
-                    ['documentClass' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Road']
-                );
-            }
-        ],
-    ],
-
-    'router' => [
-        'routes' => [
-            'Sds\Zf2ExtensionsModule\RestRoute' => [
-                'type' => 'Sds\Zf2ExtensionsModule\RestRoute',
-                'options' => [
-                    'route' => '/api',
-                    'defaults' => [
-                        'controller' => 'Sds\DoctrineExtensionsModule\Controller\JsonRestfulController'
-                    ],
-                    'endpointToControllerMap' => [
-                        'road' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\RoadController'
-                    ],
-                ],
-            ],
-        ],
-    ],
+    'view_manager' => array(
+        'display_exceptions' => true,
+        'template_map' => array(
+            'layout/layout'           => __DIR__ . '/view/layout/layout.phtml'
+        ),
+        'template_path_stack' => array(
+            __DIR__ . '/view',
+        ),
+    ),
 ];

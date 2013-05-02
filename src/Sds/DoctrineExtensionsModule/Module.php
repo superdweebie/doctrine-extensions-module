@@ -6,9 +6,9 @@
  */
 namespace Sds\DoctrineExtensionsModule;
 
-use Doctrine\Common\Annotations;
 use Sds\DoctrineExtensions\Manifest;
-use Sds\DoctrineExtensions\ManifestConfig;
+use Sds\DoctrineExtensions\MasterLazySubscriber;
+use Sds\DoctrineExtensions\ServiceManagerFactory;
 use Zend\EventManager\Event;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -22,11 +22,19 @@ use Zend\Mvc\MvcEvent;
 class Module
 {
 
-    protected $manifest;
+    protected $rewriteConfigCache = false;
 
     public function init(ModuleManager $moduleManager) {
-        $eventManager = $moduleManager->getEventManager();
-        $eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'onLoadModulesPost'));
+        $listenerOptions = $moduleManager->getEvent()->getConfigListener()->getOptions();
+        if ($listenerOptions->getConfigCacheEnabled() &&
+            !file_exists($listenerOptions->getConfigCacheFile())
+        ) {
+            $this->rewriteConfigCache = true;
+        }
+
+        $moduleManager
+            ->getEventManager()
+            ->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'postLoadModules'), -10000);
     }
 
     /**
@@ -35,13 +43,12 @@ class Module
      */
     public function onBootstrap(MvcEvent $event)
     {
-        $application = $event->getTarget();
-        $serviceManager = $application->getServiceManager();
-        $config = $serviceManager->get('Config')['sds']['doctrineExtensions'];
-        $eventManager = $application->getEventManager();
-
         // Attach to helper set event and load the document manager helper.
-        $eventManager->getSharedManager()->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
+        $event
+            ->getTarget()
+            ->getEventManager()
+            ->getSharedManager()
+            ->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
     }
 
     /**
@@ -57,101 +64,126 @@ class Module
             $helperSet->set($helper, $key);
         }
     }
-   
+
     /**
      *
      * @param \Zend\EventManager\Event $event
      */
-    public function onLoadModulesPost(ModuleEvent $event) {
+    public function postLoadModules(ModuleEvent $event) {
 
+        $configListener = $event->getConfigListener();
+        $listenerOptions = $configListener->getOptions();
         $serviceLocator = $event->getParam('ServiceManager');
         $config = $serviceLocator->get('config');
-        $doctrineConfig = $config['doctrine'];
         $extensionsConfig = $config['sds']['doctrineExtensions'];
 
-        if (isset($doctrineConfig[$extensionsConfig['doctrine']['configuration']]['metadataCache'])){
-            $cacheName = 'doctrine.cache'.$doctrineConfig[$extensionsConfig['doctrine']['configuration']]['metadataCache'];
-        } else {
-            $cacheName = 'doctrine.cache.array';
-        }
+        if ( ! $listenerOptions->getConfigCacheEnabled() || $this->rewriteConfigCache){
 
-        //set the base path for rest api if not given
-        if (array_key_exists('Sds\DoctrineExtensions\Rest', $extensionsConfig['extensionConfigs']) &&
-            !isset($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'])
-        ){
-            $request = $serviceLocator->get('request');
-            if (method_exists($request, 'getBaseUrl')){
-                if ( ! is_array($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest'])){
-                    $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest'] = [];
+            $doctrineConfig = $config['doctrine'];
+            $manifest = new Manifest([
+                'ExtensionConfigs' => $extensionsConfig['extensionConfigs'],
+                'ServiceManagerConfig' => [
+                    'aliases' => [
+                        'Sds\DoctrineExtensions\DocumentManager' => $extensionsConfig['doctrine']['documentManager']
+                    ]
+                ]
+            ]);
+
+            //remove the rest route, if rest extension is disabled
+            if (
+                ! isset($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']) ||
+                ! $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']
+            ){
+                unset($config['router']['routes']['rest']);
+            }
+
+            //remove the dojo_src route, if dojo extension is disabled
+            if (
+                ! isset($extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Dojo']) ||
+                ! $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Dojo']
+            ){
+                unset($config['router']['routes']['dojo_src']);
+            }
+
+            //Inject subscribers
+            foreach ($manifest->getSubscribers() as $subscriber) {
+                if ($subscriber instanceof MasterLazySubscriber){
+                    $name = 'Sds\DoctrineExtensions\MasterLazySubscriber';
+                    $config['service_manager']['factories'][$name] = 'Sds\DoctrineExtensionsModule\Service\MasterLazySubscriberFactory';
+                    $extensionsConfig['masterLazySubscriber'] = $subscriber->getConfig();
+                    $serviceLocator->setFactory($name, 'Sds\DoctrineExtensionsModule\Service\MasterLazySubscriberFactory');
+                    $doctrineConfig['eventmanager'][$extensionsConfig['doctrine']['eventmanager']]['subscribers'][] = $name;
+                } else {
+                    $doctrineConfig['eventmanager'][$extensionsConfig['doctrine']['eventmanager']]['subscribers'][] = $subscriber;
                 }
-                $extensionsConfig['extensionConfigs']['Sds\DoctrineExtensions\Rest']['basePath'] = $request->getBaseUrl() . $this->findRoute($config['router']['routes']);
+            }
+
+            //Inject filters
+            foreach ($manifest->getFilters() as $name => $class) {
+                $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['filters'][$name] = $class;
+            }
+
+            //inject document paths
+            $id = 0;
+            foreach ($manifest->getDocuments() as $namespace => $path) {
+                $name = 'sds.doctrineExtensions.'.$id;
+                $doctrineConfig['driver'][$extensionsConfig['doctrine']['driver']]['drivers'][$namespace] = $name;
+                $doctrineConfig['driver'][$name] = array(
+                    'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
+                    'paths' => array($path)
+                );
+                $id++;
+            }
+
+            $config['doctrine'] = $doctrineConfig;
+
+            $extensionsConfig['serviceManagerConfig'] = $manifest->getServiceManagerConfig();
+
+            $extensionsServiceManager = $manifest->getServiceManager();
+            $config['sds']['doctrineExtensions'] = $extensionsConfig;
+
+            $configListener->setMergedConfig($config);
+            $allowOverride = $serviceLocator->getAllowOverride();
+            $serviceLocator->setAllowOverride(true);
+            $serviceLocator->setService('config', $config);
+            $serviceLocator->setAllowOverride($allowOverride);
+
+            if ($this->rewriteConfigCache){
+                $this->writeArrayToFile($listenerOptions->getConfigCacheFile(), $config);
             }
         }
 
-        $reader = new Annotations\AnnotationReader;
-        $reader = new Annotations\CachedReader(
-            new Annotations\IndexedReader($reader),
-            $serviceLocator->get($cacheName)
-        );
-
-        $manifestConfig = array(
-            'AnnotationReader' => $reader,
-            'ExtensionConfigs' => $extensionsConfig['extensionConfigs']
-        );
-
-        $manifest = new Manifest(new ManifestConfig($manifestConfig));
-        $this->manifest = $manifest;
-
-        //Inject subscribers
-        foreach ($manifest->getSubscribers() as $subscriber) {
-            $doctrineConfig['eventmanager'][$extensionsConfig['doctrine']['eventmanager']]['subscribers'][] = $subscriber;
-        }
-
-        //Inject filters
-        foreach ($manifest->getFilters() as $name => $class) {
-            $doctrineConfig['configuration'][$extensionsConfig['doctrine']['configuration']]['filters'][$name] = $class;
-        }
-
-        //inject document paths
-        $id = 0;
-        foreach ($manifest->getDocuments() as $namespace => $path) {
-            $name = 'sds.doctrineExtensions.'.$id;
-            $doctrineConfig['driver'][$extensionsConfig['doctrine']['driver']]['drivers'][$namespace] = $name;
-            $doctrineConfig['driver'][$name] = array(
-                'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
-                'paths' => array($path)
+        if (!isset($extensionsServiceManager)){
+            $extensionsServiceManager = ServiceManagerFactory::create(
+                $extensionsConfig['serviceManagerConfig'],
+                $extensionsConfig['extensionConfigs']
             );
-            $id++;
         }
+        $extensionsServiceManager->setService('documentManager', $serviceLocator->get($extensionsConfig['doctrine']['documentManager']));
+        $serviceLocator->setService('Sds\DoctrineExtensions\ServiceManager', $extensionsServiceManager);
 
-        $config['doctrine'] = $doctrineConfig;
-
-        $allowOverride = $serviceLocator->getAllowOverride();
-        $serviceLocator->setAllowOverride(true);
-        $serviceLocator->setService('Config', $config);
-        $serviceLocator->setAllowOverride($allowOverride);
+        Manifest::staticBootstrapped(
+            $extensionsServiceManager
+        );
 
         if ($serviceLocator->has('Zend\Authentication\AuthenticationService')){
-            $manifest->setIdentity($serviceLocator->get('Zend\Authentication\AuthenticationService')->getIdentity());
+            $extensionsServiceManager->setService(
+                'identity',
+                $serviceLocator->get('Zend\Authentication\AuthenticationService')->getIdentity()
+            );
         }
+
+    }
+
+    protected function writeArrayToFile($filePath, $array)
+    {
+        $content = "<?php\nreturn " . var_export($array, 1) . ';';
+        file_put_contents($filePath, $content);
+        return $this;
     }
 
     public function getConfig()
     {
         return include __DIR__ . '/../../../config/module.config.php';
     }
-    
-    protected function findRoute($configs){                
-        foreach ($configs as $name => $config){
-            if ($name == 'Sds\Zf2ExtensionsModule\RestRoute'){
-                return $config['options']['route'];
-            }
-            if (isset($config['child_routes'])){
-                $route = $this->findRoute($config['child_routes']);
-                if ($route){
-                    return $route;
-                }
-            }
-        }
-    }    
 }

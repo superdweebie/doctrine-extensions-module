@@ -2,6 +2,11 @@ language: php
 
 php:
   - 5.4
+  - 5.5
+
+matrix:
+  allow_failures:
+    - php: 5.5
 
 env:
   - MONGO_VERSION=1.2.12
@@ -9,24 +14,9 @@ env:
 services: mongodb
 
 before_script:
-  - pecl -q install mongo-${MONGO_VERSION} && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-  - cd ..
-  - git clone git://github.com/zendframework/ZendSkeletonApplication.git
-  - cd ZendSkeletonApplication
-  - rm .gitmodules
-  - git rm --cached vendor/ZF2
-  - cp ../doctrineExtensionsModule/.travis/composer.json ./
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install
-  - rm -rf vendor/superdweebie/doctrine-extensions-module
-  - cp -r ../doctrineExtensionsModule vendor/superdweebie/
-  - mv vendor/superdweebie/doctrineExtensionsModule vendor/superdweebie/doctrine-extensions-module
-  - mkdir public/js/dojo_src
-  - rm config/application.config.php
-  - cp ../doctrineExtensionsModule/tests/test.application.config.php config/
-  - mv config/test.application.config.php config/application.config.php
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - composer update --dev
 
 script:
-  - ./vendor/bin/doctrine-module sds:generate:all
-  - cd vendor/superdweebie/doctrine-extensions-module
+  - cd ./tests
   - phpunit
