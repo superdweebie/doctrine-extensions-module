@@ -33,7 +33,6 @@ class RestControllerFactory implements AbstractFactoryInterface
         ]);
         $options->setServiceLocator($serviceLocator->getServiceLocator());
         $instance = new JsonRestfulController($options);
-        $options->getDocumentManager()->getEventManager()->addEventSubscriber($instance);
         return $instance;
     }
 

@@ -19,15 +19,14 @@ class DojoSrcController extends AbstractActionController
         return $this->options;
     }
 
-    public function setOptions($options) {
-        if (!$options instanceof Options) {
-            $options = new Options($options);
-        }
-        isset($this->serviceLocator) ? $options->setServiceLocator($this->serviceLocator) : null;
+    public function setOptions(Options $options) {
         $this->options = $options;
     }
 
-    public function __construct($options = null) {
+    public function __construct(Options $options = null) {
+        if (!isset($options)){
+            $options = new Options;
+        }
         $this->setOptions($options);
     }
 

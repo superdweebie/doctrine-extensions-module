@@ -98,7 +98,8 @@ return [
 
     'controllers' => [
         'factories' => [
-            'Sds\DoctrineExtensionsModule\Controller\DojoSrcController' => 'Sds\DoctrineExtensionsModule\Service\DojoSrcControllerFactory'
+            'Sds\DoctrineExtensionsModule\Controller\DojoSrcController' => 'Sds\DoctrineExtensionsModule\Service\DojoSrcControllerFactory',
+            'batch' => 'Sds\DoctrineExtensionsModule\Service\BatchJsonRestfulControllerFactory',
         ],
         'abstract_factories' => [
             'Sds\DoctrineExtensionsModule\Service\RestControllerFactory'

@@ -18,6 +18,7 @@ use Sds\DoctrineExtensions\State\Events as StateEvents;
 use Sds\DoctrineExtensions\Validator\Events as ValidatorEvents;
 use Sds\DoctrineExtensions\Validator\EventArgs as ValidatorEventArgs;
 use Sds\DoctrineExtensionsModule\Exception;
+use Sds\DoctrineExtensionsModule\Options\JsonRestfulController as Options;
 use Zend\Http\Header\CacheControl;
 use Zend\Http\Header\ContentRange;
 use Zend\Http\Header\Location;
@@ -64,6 +65,7 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
 
     public function onDispatch(MvcEvent $e) {
         $this->model = $this->acceptableViewModelSelector($this->options->getAcceptCriteria());
+        $this->options->getDocumentManager()->getEventManager()->addEventSubscriber($this);
         return parent::onDispatch($e);
     }
 
@@ -75,11 +77,14 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
         return $this->options;
     }
 
-    public function setOptions($options) {
+    public function setOptions(Options $options) {
         $this->options = $options;
     }
 
-    public function __construct($options = null) {
+    public function __construct(Options $options = null) {
+        if (!isset($options)){
+            $options = new Options;
+        }
         $this->setOptions($options);
     }
 
@@ -254,7 +259,23 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
 
         switch (true){
             case isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'one':
-                return $this->forwardReferenceOne($document, $field, $metadata, $deeperResource);
+                if (is_array($document)){
+                    $fieldValue = $document[$field];
+                } else {
+                    $fieldValue = $metadata->reflFields[$field]->getValue($document);
+                }
+
+                if ( ! isset($fieldValue)){
+                    throw new Exception\DocumentNotFoundException;
+                }
+                array_unshift($deeperResource, $this->getDocumentId($fieldValue));
+                return $this->forward()->dispatch(
+                    $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
+                    [
+                        'id' => implode('/', $deeperResource),
+                        'surpressResponse' => true
+                    ]
+                );
             case isset($mapping['embedded']) && $mapping['embedded'] && $mapping['type'] == 'many':
                 $embeddedMetadata = $this->getFieldMetadata($metadata, $field);
                 if (count($deeperResource) > 0){
@@ -403,7 +424,23 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 }
                 return $createdDocument;
             case isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'one':
-                return $this->forwardReferenceOne($document, $field, $metadata, $deeperResource);
+                if (is_array($document)){
+                    $fieldValue = $document[$field];
+                } else {
+                    $fieldValue = $metadata->reflFields[$field]->getValue($document);
+                }
+
+                if ( ! isset($fieldValue)){
+                    throw new Exception\DocumentNotFoundException;
+                }
+                array_unshift($deeperResource, $this->getDocumentId($fieldValue));
+                return $this->forward()->dispatch(
+                    $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
+                    [
+                        'id' => implode('/', $deeperResource),
+                        'surpressResponse' => true
+                    ]
+                );
             case isset($mapping['embedded']) && $mapping['embedded'] && $mapping['type'] == 'many':
                 $embeddedMetadata = $this->getFieldMetadata($metadata, $field);
                 $collection = $metadata->reflFields[$field]->getValue($document);
@@ -907,7 +944,23 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
         switch (true){
             case isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'one':
                 if (count($deeperResource) > 0){
-                    return $this->forwardReferenceOne($document, $field, $metadata, $deeperResource);
+                    if (is_array($document)){
+                        $fieldValue = $document[$field];
+                    } else {
+                        $fieldValue = $metadata->reflFields[$field]->getValue($document);
+                    }
+
+                    if ( ! isset($fieldValue)){
+                        throw new Exception\DocumentNotFoundException;
+                    }
+                    array_unshift($deeperResource, $this->getDocumentId($fieldValue));
+                    return $this->forward()->dispatch(
+                        $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
+                        [
+                            'id' => implode('/', $deeperResource),
+                            'surpressResponse' => true
+                        ]
+                    );
                 } else {
                     $metadata->reflFields[$field]->setValue($document, null);
                 }
@@ -985,28 +1038,6 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
         $serializer = $this->options->getSerializer();
         $document = $serializer->fromArray($data, $metadata->name, $mode, $document);
         return $document;
-    }
-
-    protected function forwardReferenceOne($document, $field, ClassMetadata $metadata, $deeperResource = false){
-        $documentManager = $this->options->getDocumentManager();
-
-        if (is_array($document)){
-            $fieldValue = $document[$field];
-        } else {
-            $fieldValue = $metadata->reflFields[$field]->getValue($document);
-        }
-
-        if ( ! isset($fieldValue)){
-            throw new Exception\DocumentNotFoundException;
-        }
-        array_unshift($deeperResource, $this->getDocumentId($fieldValue));
-        return $this->forward()->dispatch(
-            $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
-            [
-                'id' => implode('/', $deeperResource),
-                'surpressResponse' => true
-            ]
-        );
     }
 
     protected function findDocumentKeyInCollection($id, $collection, $metadata){
