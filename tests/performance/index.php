@@ -1,13 +1,21 @@
 <?php
 
-$applicationRoot = __DIR__ . '/../../../../../';
+$loaderPath = 'vendor/autoload.php';
+
+// Root if testing independently
+$applicationRoot = __DIR__ . '/../../';
+
+if ( ! file_exists($applicationRoot . $loaderPath )) {
+    // Root if testing as part of a larger app
+    $applicationRoot = __DIR__ . '/../../../../../';
+}
 
 chdir($applicationRoot);
 
-$loader = include 'vendor/superdweebie/fastloader/get_loader.php';
+$loader = require_once($loaderPath);
 $loader->add('Sds\\DoctrineExtensionsModule\\Test', __DIR__ . '/../');
 
 // Run the application!
 Zend\Mvc\Application::init(require __DIR__ . '/performance.application.config.php')->run();
 
-include 'vendor/superdweebie/fastloader/update_classmap.php';
+include 'vendor/persist_modified_classmap.php';

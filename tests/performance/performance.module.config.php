@@ -4,8 +4,8 @@ return [
 
     'sds' => [
         'doctrineExtensions' => [
-            'useDummyReader' => true,
-            //'useDummyReader' => false,
+            //'useDummyReader' => true,
+            'useDummyReader' => false,
             'extensionConfigs' => [
                 'Sds\DoctrineExtensions\Dojo' => false,
                 'Sds\DoctrineExtensions\Freeze' => false,
@@ -28,7 +28,7 @@ return [
         ],
         'cache' => [
             'filesystem' => [
-                'class' => 'Sds\DoctrineExtensions\FileSystemCache',
+                'class' => 'Doctrine\Common\Cache\PhpFileSerializerCache',
                 'directory' => __DIR__ . '/cache/doctrine'
             ]
         ]
