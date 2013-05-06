@@ -80,6 +80,47 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($author));
     }
 
+    public function testDelete404(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('DELETE')
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/game/does-not-exist/author', 'DELETE');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+        $this->assertTrue(isset($result));
+
+        $this->assertResponseStatusCode(404);
+    }
+
+    public function testDeleteDeepEmbeddedOne(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('DELETE')
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/game/feed-the-kitty/publisher/country', 'DELETE');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+        $this->assertFalse(isset($result));
+
+        $this->assertResponseStatusCode(204);
+        $this->assertControllerName('game');
+        $this->assertControllerClass('JsonRestfulController');
+        $this->assertMatchedRouteName('rest');
+
+        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
+        $country = $game->getPublisher()->getCountry();
+        $this->assertFalse(isset($country));
+    }
+
     public function testDeleteEmbeddedOne(){
 
         $accept = new Accept;
@@ -154,6 +195,30 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertCount(0, $compoents);
     }
 
+    public function testDeleteDeepReferenceOne(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('DELETE')
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/game/feed-the-kitty/author/country', 'DELETE');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+        $this->assertFalse(isset($result));
+
+        $this->assertResponseStatusCode(204);
+        $this->assertControllerName('game');
+        $this->assertControllerClass('JsonRestfulController');
+        $this->assertMatchedRouteName('rest');
+
+        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
+        $country = $game->getAuthor()->getCountry();
+        $this->assertFalse(isset($country));
+    }
+
     public function testDeleteReferenceOne(){
 
         $accept = new Accept;
@@ -175,6 +240,35 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $author = $game->getAuthor();
+        $this->assertFalse(isset($author));
+    }
+
+    public function testDeleteDeepReferenceListItem(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('DELETE')
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/game/feed-the-kitty/reviews/great-review/author', 'DELETE');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+        $this->assertFalse(isset($result));
+
+        $this->assertResponseStatusCode(204);
+        $this->assertControllerName('game');
+        $this->assertControllerClass('JsonRestfulController');
+        $this->assertMatchedRouteName('rest');
+
+        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
+        foreach($game->getReviews() as $review){
+            if ($review->getTitle() == 'great-review'){
+                break;
+            }
+        }
+        $author = $review->getAuthor();
         $this->assertFalse(isset($author));
     }
 

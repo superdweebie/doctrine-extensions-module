@@ -64,6 +64,7 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
     }
 
     public function onDispatch(MvcEvent $e) {
+        $this->range = null;
         $this->model = $this->acceptableViewModelSelector($this->options->getAcceptCriteria());
         $this->options->getDocumentManager()->getEventManager()->addEventSubscriber($this);
         return parent::onDispatch($e);
@@ -259,13 +260,7 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
 
         switch (true){
             case isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'one':
-                if (is_array($document)){
-                    $fieldValue = $document[$field];
-                } else {
-                    $fieldValue = $metadata->reflFields[$field]->getValue($document);
-                }
-
-                if ( ! isset($fieldValue)){
+                if ( ! $fieldValue = $document[$field]){
                     throw new Exception\DocumentNotFoundException;
                 }
                 array_unshift($deeperResource, $this->getDocumentId($fieldValue));
@@ -294,11 +289,12 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                     );
                 }
             case isset($mapping['embedded']) && $mapping['embedded'] && $mapping['type'] == 'one':
-                if (count($deeperResource) > 0){
-                    return $this->forwardEmbeddedOne('doGet', $document, $field, $metadata, $deeperResource);
-                } else {
-                    return $this->completeGet($document[$field], $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument']));
-                }
+                $embeddedMetadata = $this->getFieldMetadata($metadata, $field);
+                return $this->doGet(
+                    $document[$field],
+                    $embeddedMetadata,
+                    $deeperResource
+                );
         }
 
         throw new Exception\DocumentNotFoundException();
@@ -424,13 +420,7 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 }
                 return $createdDocument;
             case isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'one':
-                if (is_array($document)){
-                    $fieldValue = $document[$field];
-                } else {
-                    $fieldValue = $metadata->reflFields[$field]->getValue($document);
-                }
-
-                if ( ! isset($fieldValue)){
+                if ( ! $fieldValue = $metadata->reflFields[$field]->getValue($document)){
                     throw new Exception\DocumentNotFoundException;
                 }
                 array_unshift($deeperResource, $this->getDocumentId($fieldValue));
@@ -526,11 +516,46 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
         $documentManager = $this->options->getDocumentManager();
 
         if (count($deeperResource) == 0 ){
+            if (is_string($document)){
+                $id = $document;
+            } else {
+                $id = $metadata->reflFields[$metadata->identifier]->getValue($document);
+            }
+            if (isset($data[$metadata->identifier]) && $data[$metadata->identifier] != $id){
+                //Remember id for id update
+                $newId = $data[$metadata->identifier];
+            }
+            $data[$metadata->identifier] = $id;
             $document = $this->unserialize($data, $document, $metadata, Serializer::UNSERIALIZE_UPDATE);
             if ( ! $documentManager->contains($document) && ! $metadata->isEmbeddedDocument){
-                return $this->doCreate($data, $document, $metadata, []);
+                return $this->doCreate([], $document, $metadata, []);
             }
 
+            if (isset($newId)){
+                $this->doDelete($document, $metadata, []);
+
+                //clone the document
+                $newDocument = $metadata->newInstance();
+                foreach ($metadata->reflFields as $field => $refl){
+                    $refl->setValue($newDocument, $refl->getValue($document));
+                }
+                $metadata->reflFields[$metadata->identifier]->setValue($newDocument, $newId);
+
+                //update references
+                foreach ($metadata->associationMappings as $field => $mapping){
+                    if ($mapping['reference'] && $mapping['type'] == 'many' && $mapping['mappedBy']){
+                        $documentManager
+                            ->createQueryBuilder($mapping['targetDocument'])
+                            ->update()
+                            ->multiple(true)
+                            ->field($mapping['mappedBy'])->equals($id)
+                            ->field($mapping['mappedBy'])->set($newId)
+                            ->getQuery()
+                            ->execute();
+                    }
+                }
+                return $this->doCreate([], $newDocument, $metadata, []);
+            }
             return $document;
         }
 
@@ -603,10 +628,15 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 if (count($deeperResource) > 0){
                     $collection = $metadata->reflFields[$field]->getValue($document);
                     $key = $this->findDocumentKeyInCollection($deeperResource[0], $collection, $embeddedMetadata);
+                    if (isset($key)){
+                        $embeddedDocument = $collection[$key];
+                    } else {
+                        $embeddedDocument = $deeperResource[0];
+                    }
                     array_shift($deeperResource);
                     $updatedDocument = $this->doUpdate(
                         $data,
-                        isset($key) ? $collection[$key] : null,
+                        $embeddedDocument,
                         $embeddedMetadata,
                         $deeperResource
                     );
@@ -788,13 +818,19 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 if (count($deeperResource) > 0){
                     $collection = $metadata->reflFields[$field]->getValue($document);
                     $key = $this->findDocumentKeyInCollection($deeperResource[0], $collection, $embeddedMetadata);
+                    if (isset($key)){
+                        $embeddedDocument = $collection[$key];
+                    } else {
+                        $embeddedDocument = $deeperResource[0];
+                    }
                     array_shift($deeperResource);
                     $patchedDocument = $this->doPatch(
                         $data,
-                        isset($key) ? $collection[$key] : null,
+                        $embeddedDocument,
                         $embeddedMetadata,
                         $deeperResource
                     );
+
                     if (isset($key)){
                         $collection[$key] = $patchedDocument;
                     } else {
@@ -995,7 +1031,16 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 }
             case isset($mapping['embedded']) && $mapping['embedded'] && $mapping['type'] == 'one':
                 if (count($deeperResource) > 0){
-                    return $this->forwardEmbeddedOne('doDelete', $document, $field, $metadata, $deeperResource);
+                    $embeddedMetadata = $this->getFieldMetadata($metadata, $field);
+                    $embeddedDocument = $metadata->reflFields[$field]->getValue($document);
+                    if (!isset($embeddedDocument)){
+                        throw new Exception\DocumentNotFoundException();
+                    }
+                    return $this->doDelete(
+                        $metadata->reflFields[$field]->getValue($document),
+                        $embeddedMetadata,
+                        $deeperResource
+                    );
                 } else {
                     $metadata->reflFields[$field]->setValue($document, null);
                     return;

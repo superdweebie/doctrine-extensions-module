@@ -16,8 +16,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "superdweebie/doctrine-extensions":   "dev-master",
-        "superdweebie/exception-module":      "dev-master",
+        "superdweebie/doctrine-extensions":   "~0.3",
+        "superdweebie/exception-module":      "~0.3",
         "doctrine/doctrine-mongo-odm-module": "dev-master",
         "zendframework/zend-servicemanager":  "~2.1",
         "zendframework/zend-modulemanager":   "~2.1",

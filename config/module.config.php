@@ -34,12 +34,12 @@ return [
                 'Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException' => [
                     'describedBy' => 'document-not-found',
                     'title' => 'Document not found',
-                    'httpStatus' => 404
+                    'statusCode' => 404
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\BadRangeException' => [
                     'describedBy' => 'bad-range',
                     'title' => 'Requested range cannot be returned',
-                    'httpStatus' => 416
+                    'statusCode' => 416
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\InvalidDocumentException' => [
                     'describedBy' => 'document-validation-failed',
@@ -53,13 +53,17 @@ return [
                 'Sds\DoctrineExtensionsModule\Exception\AccessControlException' => [
                     'describedBy' => 'access-control-exception',
                     'title' => 'Access denied',
-                    'httpStatus' => 403,
+                    'statusCode' => 403,
                     'action' => ['action']
                 ]
             ]
         ]
     ],
 
+    'doctrine_factories' => [
+        'driver' => 'Sds\DoctrineExtensionsModule\Service\DriverFactory',
+    ],
+    
     'doctrine' => [
         'configuration' => [
             'odm_default' => [

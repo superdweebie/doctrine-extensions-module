@@ -4,8 +4,6 @@ return [
 
     'sds' => [
         'doctrineExtensions' => [
-            'useDummyReader' => true,
-            //'useDummyReader' => false,
             'extensionConfigs' => [
                 'Sds\DoctrineExtensions\Dojo' => false,
                 'Sds\DoctrineExtensions\Freeze' => false,

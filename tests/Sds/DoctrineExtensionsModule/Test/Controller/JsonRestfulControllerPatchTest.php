@@ -105,6 +105,25 @@ class JsonRestfulControllerPatchTest extends AbstractHttpControllerTestCase{
         $this->assertEquals('harry', $author->getName());
     }
 
+    public function testPatchDeep404(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('PATCH')
+            ->setContent('{"country": {"$ref": "country/us"}}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/game/does-not-exist/author');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+        $this->assertResponseStatusCode(404);
+        $this->assertEquals('Content-Type: application/api-problem+json', $this->getResponse()->getHeaders()->get('Content-Type')->toString());
+        $this->assertEquals('/exception/document-not-found', $result['describedBy']);
+        $this->assertEquals('Document not found', $result['title']);
+    }
+
     public function testPatchEmbedded404(){
 
         $accept = new Accept;
@@ -168,9 +187,13 @@ class JsonRestfulControllerPatchTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
-        $components = $game->getComponents();
-        $this->assertEquals('custom', $components[0]->getType());
-        $this->assertCount(1, $components[0]->getManufacturers());
+        foreach ($game->getComponents() as $component){
+            if ($component->getName() == 'action-dice'){
+                break;
+            }
+        }
+        $this->assertEquals('custom', $component->getType());
+        $this->assertCount(1, $component->getManufacturers());
     }
 
     public function testPatchEmbeddedList(){
@@ -199,6 +222,33 @@ class JsonRestfulControllerPatchTest extends AbstractHttpControllerTestCase{
         $this->assertEquals('paper', $components[3]->getType());
         $this->assertEquals('telescoping', $components[4]->getType());
         $this->assertTrue(2 < count($components));
+    }
+
+    public function testUpdateEmbeddedListItemWithNew(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('PATCH')
+            ->setContent('{"type": "paper"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/game/feed-the-kitty/components/feeback-form');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
+
+        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
+        foreach($game->getComponents() as $component){
+            if ($component->getName() == 'feedback-form'){
+                break;
+            }
+        }
+        $this->assertEquals('paper', $component->getType());
     }
 
     public function testPatchReferencedOne(){
@@ -296,11 +346,14 @@ class JsonRestfulControllerPatchTest extends AbstractHttpControllerTestCase{
 
         $this->documentManager->clear();
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
-        $review = $game->getReviews()[0];
+        foreach ($game->getReviews() as $review){
+            if ($review->getTitle() == 'great-review'){
+                break;
+            }
+        }
         $this->assertEquals('great-review', $review->getTitle());
         $this->assertEquals('harry', $review->getAuthor()->getName());
         $this->assertEquals('this is the review content', $review->getContent());
-
     }
 
     public function testPatchReferencedListItemWithNew(){

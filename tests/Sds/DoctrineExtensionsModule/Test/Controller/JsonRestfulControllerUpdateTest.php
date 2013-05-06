@@ -152,6 +152,29 @@ class JsonRestfulControllerUpdateTest extends AbstractHttpControllerTestCase{
         $this->assertCount(0, $components[0]->getManufacturers());
     }
 
+    public function testUpdateEmbeddedListItemWithNew(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('PUT')
+            ->setContent('{"type": "paper"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/game/feed-the-kitty/components/feeback-form');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
+
+        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
+        $components = $game->getComponents();
+        $this->assertEquals('paper', $components[3]->getType());
+    }
+
     public function testReplaceEmbeddedList(){
 
         $accept = new Accept;
@@ -308,6 +331,62 @@ class JsonRestfulControllerUpdateTest extends AbstractHttpControllerTestCase{
 
     }
 
+    public function testUpdateExistingDocument(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('PUT')
+            ->setContent('{"type": "childrens", "author": {"$ref": "author/harry"}}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/game/feed-the-kitty', 'PUT');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
+
+        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
+        $this->assertEquals('childrens', $game->getType());
+        $this->assertEquals('harry', $game->getAuthor()->getName());
+        $this->assertEquals(null, $game->getPublisher());
+        $this->assertCount(0, $game->getReviews());
+    }
+
+    public function testUpdateExistingDocumentId(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('PUT')
+            ->setContent('{"name": "thomas-dean", "nickname": "deano"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/author/thomas');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
+
+        $this->assertEquals('Location: /rest/author/thomas-dean', $response->getHeaders()->get('Location')->toString());
+
+        $this->documentManager->clear();
+        $author = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->find('thomas');
+        $this->assertFalse(isset($author));
+        $author = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->find('thomas-dean');
+        $this->assertTrue(isset($author));
+        $this->assertEquals('deano', $author->getNickname());
+
+        $review = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Review')->find('bad-review');
+        $this->assertEquals('thomas-dean', $review->getAuthor()->getName());
+    }
+
     public function testReplaceReferencedList(){
 
         $accept = new Accept;
@@ -334,31 +413,6 @@ class JsonRestfulControllerUpdateTest extends AbstractHttpControllerTestCase{
         $this->assertEquals('new-review-1', $review->getTitle());
         $review = $game->getReviews()[1];
         $this->assertEquals('new-review-2', $review->getTitle());
-    }
-
-    public function testUpdateExistingDocument(){
-
-        $accept = new Accept;
-        $accept->addMediaType('application/json');
-
-        $this->getRequest()
-            ->setMethod('PUT')
-            ->setContent('{"type": "childrens", "author": {"$ref": "author/harry"}}')
-            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
-
-        $this->dispatch('/rest/game/feed-the-kitty', 'PUT');
-
-        $response = $this->getResponse();
-        $result = json_decode($response->getContent(), true);
-
-        $this->assertResponseStatusCode(204);
-        $this->assertFalse(isset($result));
-
-        $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
-        $this->assertEquals('childrens', $game->getType());
-        $this->assertEquals('harry', $game->getAuthor()->getName());
-        $this->assertEquals(null, $game->getPublisher());
-        $this->assertCount(0, $game->getReviews());
     }
 
     public function testReplaceList(){

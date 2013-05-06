@@ -13,7 +13,9 @@ use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
+use Zend\Stdlib\Parameters;
 use Zend\View\Model\JsonModel;
+use Zend\View\Model\ModelInterface;
 
 class BatchJsonRestfulController extends AbstractRestfulController
 {
@@ -43,37 +45,57 @@ class BatchJsonRestfulController extends AbstractRestfulController
             $request = new Request();
             $request->setMethod($requestData['method']);
             $request->setUri($requestData['uri']);
+            $queryString = $request->getUri()->getQuery();
+            if ($queryString) {
+                $query = [];
+                parse_str($queryString, $query);
+                $request->setQuery(new Parameters($query));
+            }
+
             if (isset($requestData['headers'])){
                 foreach ($requestData['headers'] as $name => $value){
-                    $request->getHeaders()->addHeader($name, $value);
+                    $request->getHeaders()->addHeaderLine($name, $value);
                 }
             }
-            $request->getHeaders()->addHeader($this->request->getHeaders()->get('Accept'));
+            $request->getHeaders()->addHeaders([
+                $this->request->getHeaders()->get('Accept'),
+                $this->request->getHeaders()->get('Content-Type'),
+            ]);
             if (isset($requestData['content'])){
-                $request->setContent = $requestData['content'];
+                $request->setContent(json_encode($requestData['content']));
             }
 
-            $match = $router->match($request);
-            if ($match->getMatchedRouteName() != 'rest'){
-                //shouldn't throw - need to return serialzied exception
-                throw new Exception\RuntimeException(sprintf(
-                    '%s uri is not a rest route, so is not supported by batch controller.', $requestData['uri']
-                ));
-            }
-            $event = new MvcEvent;
-            $event->setRouteMatch($match);
             $response = new Response;
+            $event = new MvcEvent;
+            $event->setRequest($request);
+            $event->setResponse($response);
+            $match = $router->match($request);
+            $contentModel = null;
+            if (!isset($match) || $match->getMatchedRouteName() != 'rest'){
+                $contentModel = $this->createExceptionContentModel(
+                    new Exception\RuntimeException(sprintf(
+                        '%s uri is not a rest route, so is not supported by batch controller.', $requestData['uri']
+                    )),
+                    $event
+                );
+            } else {
+                try {
+                    $controller = $controllerLoader->get($match->getParam('controller'));
+                } catch (\Zend\ServiceManager\Exception\ServiceNotFoundException $exception) {
+                    $contentModel = $this->createExceptionContentModel($exception, $event);
+                    $response->setStatusCode(404);
+                }
 
-            $controller = $controllerLoader->get($match->getParam('controller'));
-            $controller->setEvent($event);
+                $event->setRouteMatch($match);
+                $controller->setEvent($event);
 
-            try {
-                $contentModel = $controller->dispatch($request, $response);
-            } catch (\Exception $exception) {
-                $event->setError(Application::ERROR_EXCEPTION);
-                $event->setParam('exception', $exception);
-                $this->options->getExceptionViewModelPreparer()->prepareExceptionViewModel($event);
-                $contentModel = $event->getResult();
+                if (!isset($contentModel)){
+                    try {
+                        $contentModel = $controller->dispatch($request, $response);
+                    } catch (\Exception $exception) {
+                        $contentModel = $this->createExceptionContentModel($exception, $event);
+                    }
+                }
             }
 
             $headers = [];
@@ -84,11 +106,20 @@ class BatchJsonRestfulController extends AbstractRestfulController
                 'status' => $response->getStatusCode(),
                 'headers' => $headers
             ]);
-            $responseModel->addChild($contentModel, 'content');
+            if ($contentModel instanceof ModelInterface){
+                $responseModel->addChild($contentModel, 'content');
+            }
             $this->model->addChild($responseModel, $key);
         }
 
         return $this->model;
+    }
+
+    protected function createExceptionContentModel($exception, $event) {
+        $event->setError(Application::ERROR_EXCEPTION);
+        $event->setParam('exception', $exception);
+        $this->options->getExceptionViewModelPreparer()->prepareExceptionViewModel($event);
+        return $event->getResult();
     }
 
     public function onDispatch(MvcEvent $e) {

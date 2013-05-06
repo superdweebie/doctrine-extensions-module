@@ -6,7 +6,7 @@
 namespace Sds\DoctrineExtensionsModule\Service;
 
 use Sds\DoctrineExtensionsModule\Controller\DojoSrcController;
-use Sds\DoctrineExtensionsModule\Options\DojoScrController as Options;
+use Sds\DoctrineExtensionsModule\Options\DojoSrcController as Options;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

@@ -58,6 +58,24 @@ class JsonRestfulControllerCreateTest extends AbstractHttpControllerTestCase{
         $this->assertEquals('co-op', $game->getType());
     }
 
+    public function testCreateDeep404(){
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod('POST')
+            ->setContent('{"name": "nathan"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/game/does-not-exist/author');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(404);
+    }
+
     public function testCreateValidationFail(){
 
         $accept = new Accept;
