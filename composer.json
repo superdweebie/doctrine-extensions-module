@@ -27,8 +27,7 @@
         "zendframework/zend-stdlib":          "~2.1"
     },
     "require-dev": {
-        "zendframework/zend-test":            "~2.1",
-        "zendframework/zendframework":        "2.1.5"
+        "zendframework/zend-test":            "~2.1"
     },
     "autoload": {
         "psr-0": {
