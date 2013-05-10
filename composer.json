@@ -27,7 +27,9 @@
         "zendframework/zend-stdlib":          "~2.1"
     },
     "require-dev": {
-        "zendframework/zend-test":            "~2.1"
+        "zendframework/zendframework":        "dev-develop",
+        "superdweebie/doctrine-extensions":   "dev-develop",
+        "superdweebie/exception-module":      "dev-develop"
     },
     "autoload": {
         "psr-0": {
