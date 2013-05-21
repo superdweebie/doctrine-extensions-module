@@ -11,13 +11,13 @@ namespace Sds\DoctrineExtensionsModule\Options;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class DojoSrcController extends AbstractController
+class DojoController extends AbstractController
 {
-    protected $generator = 'generator';
+    protected $generator;
 
     public function getGenerator() {
         if (is_string($this->generator)) {
-            $this->generator = $this->serviceLocator->get('Sds\DoctrineExtensions\ServiceManager')->get($this->generator);
+            $this->generator = $this->serviceLocator->get($this->generator);
         }
         return $this->generator;
     }

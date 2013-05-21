@@ -26,7 +26,7 @@ class JsonRestfulControllerPatchTest extends AbstractHttpControllerTestCase{
 
         parent::setUp();
 
-        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.documentmanager.odm_default');
+        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.odm.documentmanager.default');
         static::$staticDcumentManager = $this->documentManager;
 
         if ( ! static::$dbDataCreated){

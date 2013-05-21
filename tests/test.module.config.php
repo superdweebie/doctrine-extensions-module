@@ -2,51 +2,51 @@
 return [
     'sds' => [
         'doctrineExtensions' => [
-            'extensionConfigs' => [
-                'Sds\DoctrineExtensions\AccessControl' => true,
-                'Sds\DoctrineExtensions\Annotation' => true,
-                'Sds\DoctrineExtensions\Crypt' => true,
-                'Sds\DoctrineExtensions\Dojo' => [
-                    'filePaths' => [
-                        'all' => [
-                            'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',
-                            'path' => 'data'
+            'manifest' => [
+                'default' => [
+                    'extension_configs' => [
+                        'extension.accessControl' => true,
+                        'extension.annotation' => true,
+                        'extension.crypt' => true,
+                        'extension.dojo' => [
+                            'filePaths' => [
+                                'all' => [
+                                    'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',
+                                    'path' => 'data'
+                                ],
+                            ],
                         ],
+                        'extension.freeze' => true,
+                        'extension.generator' => true,
+                        'extension.identity' => true,
+                        'extension.owner' => true,
+                        'extension.readonly' => true,
+                        'extension.reference' => true,
+                        'extension.rest' => true,
+                        'extension.serializer' => [
+                            'maxNestingDepth' => 2
+                        ],
+                        'extension.softdelete' => true,
+                        'extension.stamp' => true,
+                        'extension.state' => true,
+                        'extension.validator' => true,
+                        'extension.zone' => true,
                     ],
-                ],
-                'Sds\DoctrineExtensions\Freeze' => true,
-                'Sds\DoctrineExtensions\Readonly' => true,
-                'Sds\DoctrineExtensions\Rest' => true,
-                'Sds\DoctrineExtensions\Serializer' => [
-                    'maxNestingDepth' => 2
-                ],
-                'Sds\DoctrineExtensions\SoftDelete' => true,
-                'Sds\DoctrineExtensions\Stamp' => true,
-                'Sds\DoctrineExtensions\State' => true,
-                'Sds\DoctrineExtensions\Validator' => true,
-                'Sds\DoctrineExtensions\Zone' => true,
+                    'documents' => [
+                        'Sds\DoctrineExtensionsModule\Test\TestAsset\Document' => __DIR__.'/Sds/DoctrineExtensionsModule/Test/TestAsset/Document'
+                    ]
+                ]
             ],
         ],
     ],
 
     'doctrine' => [
-        'configuration' => [
-            'odm_default' => [
-                'default_db' => 'doctrineExtensionsModuleTest',
-                'proxy_dir'    => __DIR__ . '/Proxy',
-                'hydrator_dir' => __DIR__ . '/Hydrator',
-            ],
-        ],
-        'driver' => [
-            'odm_default' => [
-                'drivers' => [
-                    'Sds\DoctrineExtensionsModule\Test\TestAsset\Document' => 'test'
-                ],
-            ],
-            'test' => [
-                'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
-                'paths' => [
-                    __DIR__.'/Sds/DoctrineExtensionsModule/Test/TestAsset/Document'
+        'odm' => [
+            'configuration' => [
+                'default' => [
+                    'default_db' => 'doctrineExtensionsModuleTest',
+                    'proxy_dir'    => __DIR__ . '/Proxy',
+                    'hydrator_dir' => __DIR__ . '/Hydrator',
                 ],
             ],
         ],

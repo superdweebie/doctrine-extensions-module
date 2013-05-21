@@ -13,7 +13,7 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
     protected static $dbDataCreated = false;
 
     public static function tearDownAfterClass(){
-        TestData::remove(static::$staticDcumentManager);
+//        TestData::remove(static::$staticDcumentManager);
     }
 
     public function setUp(){
@@ -24,7 +24,7 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
 
         parent::setUp();
 
-        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.documentmanager.odm_default');
+        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.odm.documentmanager.default');
         static::$staticDcumentManager = $this->documentManager;
 
         if ( ! static::$dbDataCreated){
@@ -44,12 +44,12 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/game/feed-the-kitty');
 
-        $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
-        $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
-
         $result = json_decode($this->getResponse()->getContent(), true);
+
+        $this->assertResponseStatusCode(200);
+        $this->assertControllerName('rest.default.game');
+        $this->assertControllerClass('JsonRestfulController');
+        $this->assertMatchedRouteName('rest.default');
 
         $this->assertEquals('Cache-Control: no-cache', $this->getResponse()->getHeaders()->get('Cache-Control')->toString());
         $this->assertEquals('feed-the-kitty', $result['name']);
@@ -144,9 +144,9 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/game/feed-the-kitty?select(publisher,type)');
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
 
@@ -169,9 +169,9 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/game/feed-the-kitty/publisher');
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
 
@@ -192,9 +192,9 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $this->assertEquals('die', $result['type']);
     }
@@ -211,9 +211,9 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/game/feed-the-kitty/author');
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
 
@@ -232,9 +232,9 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/game/feed-the-kitty/reviews/great-review');
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
 
@@ -255,9 +255,9 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $this->assertEquals('us', $result['name']);
     }
@@ -276,9 +276,8 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
         $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('review');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $this->assertEquals('thomas', $result['name']);
     }

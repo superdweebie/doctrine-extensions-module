@@ -30,9 +30,6 @@ class AbstractController extends AbstractOptions
     }
 
     public function getDocumentManager() {
-        if (!isset($this->documentManager)){
-            $this->documentManager = $this->serviceLocator->get('config')['sds']['doctrineExtensions']['doctrine']['documentManager'];
-        }
         if (is_string($this->documentManager)) {
             $this->documentManager = $this->serviceLocator->get($this->documentManager);
         }

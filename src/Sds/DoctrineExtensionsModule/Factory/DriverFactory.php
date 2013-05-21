@@ -1,9 +1,23 @@
 <?php
-/**
- * @package    Sds
- * @license    MIT
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
  */
-namespace Sds\DoctrineExtensionsModule\Service;
+
+namespace Sds\DoctrineExtensionsModule\Factory;
 
 use InvalidArgumentException;
 use Doctrine\Common\Annotations;
@@ -11,27 +25,53 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
-use DoctrineModule\Options\Driver as DriverOptions;
-use DoctrineModule\Service\DriverFactory as BaseDriverFactory;
+use DoctrineModule\Factory\AbstractFactoryInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
+ * MappingDriver factory
  *
- * @since   1.0
- * @version $Revision$
- * @author  Tim Roediger <superdweebie@gmail.com>
+ * @license MIT
+ * @link    http://www.doctrine-project.org/
+ * @author  Kyle Spraggs <theman@spiffyjr.me>
  */
-class DriverFactory extends BaseDriverFactory
+class DriverFactory implements AbstractFactoryInterface, ServiceLocatorAwareInterface
 {
 
+    const OPTIONS_CLASS = '\DoctrineModule\Options\Driver';
+
+    protected $serviceLocator;
+
     /**
-     * @param  ServiceLocatorInterface  $sl
-     * @param  DriverOptions            $options
-     * @throws InvalidArgumentException
+     * {@inheritDoc}
+     */
+    public function getServiceLocator() {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator) {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * {@inheritDoc}
      * @return MappingDriver
      */
-    protected function createDriver(ServiceLocatorInterface $sl, DriverOptions $options)
+    public function create($options)
     {
+
+        $optionsClass = self::OPTIONS_CLASS;
+
+        if (is_array($options) || $options instanceof \Traversable){
+            $options = new $optionsClass($options);
+        } else if ( ! $options instanceof $optionsClass){
+            throw new \InvalidArgumentException();
+        }
+
         $class = $options->getClass();
 
         if (!$class) {
@@ -91,12 +131,15 @@ class DriverFactory extends BaseDriverFactory
                 $drivers = array($drivers);
             }
 
-            foreach ($drivers as $namespace => $driverName) {
-                if (null === $driverName) {
+            foreach ($drivers as $namespace => $childDriver) {
+                if (null === $childDriver) {
                     continue;
                 }
-                $options = $this->getOptions($sl, 'driver', $driverName);
-                $driver->addDriver($this->createDriver($sl, $options), $namespace);
+                if (is_string($childDriver)){
+                    $driver->addDriver($this->serviceLocator->get($childDriver), $namespace);
+                    continue;
+                }
+                $driver->addDriver($childDriver, $namespace);
             }
         }
 

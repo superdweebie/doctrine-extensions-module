@@ -7,10 +7,10 @@
 namespace Sds\DoctrineExtensionsModule\Controller;
 
 use Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException;
-use Sds\DoctrineExtensionsModule\Options\DojoSrcController as Options;
+use Sds\DoctrineExtensionsModule\Options\DojoController as Options;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class DojoSrcController extends AbstractActionController
+class DojoController extends AbstractActionController
 {
 
     protected $options;

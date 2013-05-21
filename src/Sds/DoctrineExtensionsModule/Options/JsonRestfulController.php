@@ -27,6 +27,8 @@ class JsonRestfulController extends AbstractController
 
     protected $serializer = 'serializer';
 
+    protected $referenceMap = 'referenceMap';
+
     protected $documentClass;
 
     protected $limit = '30';
@@ -34,6 +36,8 @@ class JsonRestfulController extends AbstractController
     protected $exceptionSerializer = 'Sds\ExceptionModule\JsonExceptionStrategy';
 
     protected $surpressFlush;
+
+    protected $manifestName;
 
     public function getAcceptCriteria() {
         return $this->acceptCriteria;
@@ -61,13 +65,20 @@ class JsonRestfulController extends AbstractController
 
     public function getSerializer() {
         if (is_string($this->serializer)) {
-            if ($this->serviceLocator->has($this->serializer)){
-                $this->serializer = $this->serviceLocator->get($this->serializer);
-            } else {
-                $this->serializer = $this->serviceLocator->get('Sds\DoctrineExtensions\ServiceManager')->get($this->serializer);
-            }
+            $this->serializer = $this->serviceLocator->get($this->serializer);
         }
         return $this->serializer;
+    }
+
+    public function setReferenceMap($referenceMap) {
+        $this->referenceMap = $referenceMap;
+    }
+
+    public function getReferenceMap() {
+        if (is_string($this->referenceMap)) {
+            $this->referenceMap = $this->serviceLocator->get($this->referenceMap);
+        }
+        return $this->referenceMap;
     }
 
     public function getDocumentClass() {
@@ -103,5 +114,13 @@ class JsonRestfulController extends AbstractController
 
     public function setSurpressFlush($surpressFlush) {
         $this->surpressFlush = (boolean) $surpressFlush;
+    }
+
+    public function getManifestName() {
+        return $this->manifestName;
+    }
+
+    public function setManifestName($manifestName) {
+        $this->manifestName = (string) $manifestName;
     }
 }

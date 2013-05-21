@@ -9,7 +9,7 @@ class TestDataController extends AbstractActionController
     public function createAction()
     {
         TestData::create(
-            $this->serviceLocator->get('doctrine.documentmanager.odm_default')
+            $this->serviceLocator->get('doctrine.odm.documentmanager.default')
         );
 
         return;
@@ -18,7 +18,7 @@ class TestDataController extends AbstractActionController
     public function removeAction()
     {
         TestData::remove(
-            $this->serviceLocator->get('doctrine.documentmanager.odm_default')
+            $this->serviceLocator->get('doctrine.odm.documentmanager.default')
         );
 
         return;

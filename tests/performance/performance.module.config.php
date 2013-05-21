@@ -15,13 +15,15 @@ return [
     ],
 
     'doctrine' => [
-        'configuration' => [
-            'odm_default' => [
-                //'metadata_cache'     => 'memcache',
-                'metadata_cache'     => 'filesystem',
-                //'metadata_cache'     => 'array',
-                'generate_proxies'   => false,
-                'generate_hydrators' => false,
+        'odm' => [
+            'configuration' => [
+                'default' => [
+                    'metadata_cache'     => 'memcache',
+                    //'metadata_cache'     => 'filesystem',
+                    'metadata_cache'     => 'array',
+                    'generate_proxies'   => false,
+                    'generate_hydrators' => false,
+                ],
             ],
         ],
         'cache' => [
@@ -44,7 +46,6 @@ return [
         ],
         'factories' => array(
             'my_memcache_alias' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\MemcacheFactory',
-            'ViewHelperManager' => 'Sds\DoctrineExtensionsModule\Service\ViewHelperManagerFactory'
         )
     ),
 

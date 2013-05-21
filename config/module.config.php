@@ -2,27 +2,43 @@
 return [
     'sds' => [
         'doctrineExtensions' => [
-            'doctrine' => [
-                'driver' => 'odm_default',
-                'eventmanager' => 'odm_default',
-                'configuration' => 'odm_default',
-                'documentManager' => 'doctrine.documentmanager.odm_default',
-            ],
-            'extensionConfigs' => [
-//                'Sds\DoctrineExtensions\AccessControl' => true,
-//                'Sds\DoctrineExtensions\Annotation' => true,
-//                'Sds\DoctrineExtensions\Crypt' => true,
-//                'Sds\DoctrineExtensions\Dojo' => true,
-//                'Sds\DoctrineExtensions\Freeze' => true,
-//                'Sds\DoctrineExtensions\Readonly' => true,
-//                'Sds\DoctrineExtensions\Rest' => true,
-//                'Sds\DoctrineExtensions\Serializer' => true,
-//                'Sds\DoctrineExtensions\SoftDelete' => true,
-//                'Sds\DoctrineExtensions\Stamp' => true,
-//                'Sds\DoctrineExtensions\State' => true,
-//                'Sds\DoctrineExtensions\Validator' => true,
-//                'Sds\DoctrineExtensions\Zone' => true,
-            ],
+
+            //doctrineExtensions supports multiple manifest-documentManager pairs.
+            //each manifest should be configured with it's own documentManager.
+            //a default manifest is pre-configured with the default documentManager
+            'manifest' => [
+                'default' => [
+                    'document_manager' => 'doctrine.odm.documentmanager.default',
+                    'extension_configs' => [
+//                        'extension.accessControl' => true,
+//                        'extension.annotation' => true,
+//                        'extension.crypt' => true,
+//                        'extension.dojo' => true,
+//                        'extension.freeze' => true,
+//                        'extension.generator' => true,
+//                        'extension.identity' => true,
+//                        'extension.owner' => true,
+//                        'extension.readonly' => true,
+//                        'extension.reference' => true,
+//                        'extension.rest' => true,
+//                        'extension.serializer' => true,
+//                        'extension.softdelete' => true,
+//                        'extension.stamp' => true,
+//                        'extension.state' => true,
+//                        'extension.validator' => true,
+//                        'extension.zone' => true,
+                    ],
+                    'service_manager_config' => [
+                        'invokables' => [
+                            'eventManagerDelegatorFactory' => 'Sds\DoctrineExtensionsModule\Delegator\EventManagerDelegatorFactory',
+                            'configurationDelegatorFactory' => 'Sds\DoctrineExtensionsModule\Delegator\ConfigurationDelegatorFactory'
+                        ],
+                        'abstract_factories' => [
+                            'Sds\DoctrineExtensionsModule\Service\IdentityAbstractFactory'
+                        ]
+                    ]
+                ]
+            ]
         ],
         'exception' => [
             'exceptionMap' => [
@@ -60,39 +76,46 @@ return [
         ]
     ],
 
-    'doctrine_factories' => [
-        'driver' => 'Sds\DoctrineExtensionsModule\Service\DriverFactory',
-    ],
-    
     'doctrine' => [
-        'configuration' => [
-            'odm_default' => [
-                'classMetadataFactoryName' => 'Sds\DoctrineExtensions\ClassMetadataFactory'
-            ]
-        ],
+        'odm' => [
+            'configuration' => [
+                'default' => [
+                    'classMetadataFactoryName' => 'Sds\DoctrineExtensions\ClassMetadataFactory'
+                ]
+            ],
+        ]
     ],
 
     'router' => [
         'routes' => [
-            'rest' => [
+            'rest.default' => [
+                //this route will look to load a controller
+                //service called `rest.<manifestName>.<endpoint>`
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route' => '/rest/:controller[/:id]',
+                    'route' => '/rest/:endpoint[/:id]',
                     'constraints' => [
                         'controller' => '[a-zA-Z][a-zA-Z0-9_-]+',
                         'id'         => '[a-zA-Z][a-zA-Z0-9/_-]+',
                     ],
+                    'defaults' => [
+                        'extension'    => 'rest',
+                        'manifestName' => 'default',
+                    ]
                 ],
             ],
-            'dojo_src' => [
+            'dojo.default' => [
+                //this route will look to load a controller
+                //service called `dojo.<manifestName>`
                 'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => [
-                    'route'    => '/dojo_src/:module',
+                    'route'    => '/dojo/:module',
                     'constraints' => [
                         'module'     => '[a-zA-Z][a-zA-Z0-9/_-]+.js',
                     ],
                     'defaults' => [
-                        'controller' => 'Sds\DoctrineExtensionsModule\Controller\DojoSrcController',
+                        'extension'    => 'dojo',
+                        'manifestName' => 'default',
                         'action'     => 'index',
                     ],
                 ],
@@ -102,11 +125,20 @@ return [
 
     'controllers' => [
         'factories' => [
-            'Sds\DoctrineExtensionsModule\Controller\DojoSrcController' => 'Sds\DoctrineExtensionsModule\Service\DojoSrcControllerFactory',
-            'batch' => 'Sds\DoctrineExtensionsModule\Service\BatchJsonRestfulControllerFactory',
+            'rest.default.batch' => 'Sds\DoctrineExtensionsModule\Service\BatchRestControllerFactory'
         ],
         'abstract_factories' => [
-            'Sds\DoctrineExtensionsModule\Service\RestControllerFactory'
+            'Sds\DoctrineExtensionsModule\Service\RestControllerAbstractFactory',
+            'Sds\DoctrineExtensionsModule\Service\DojoControllerAbstractFactory'
+        ]
+    ],
+
+    'service_manager' => [
+        'invokables' => [
+            'doctrine.factory.driver' => 'Sds\DoctrineExtensionsModule\Factory\DriverFactory',
+        ],
+        'abstract_factories' => [
+            'Sds\DoctrineExtensionsModule\Service\DoctrineExtensionsServiceAbstractFactory'
         ]
     ],
 
