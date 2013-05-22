@@ -17,5 +17,3 @@ $loader->add('Sds\\DoctrineExtensionsModule\\Test', __DIR__ . '/../');
 
 // Run the application!
 Zend\Mvc\Application::init(require __DIR__ . '/performance.application.config.php')->run();
-
-include 'vendor/persist_modified_classmap.php';
