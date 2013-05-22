@@ -93,7 +93,7 @@ class DriverFactory implements AbstractFactoryInterface, ServiceLocatorAwareInte
             $reader = new Annotations\AnnotationReader;
             $reader = new Annotations\CachedReader(
                 $reader,
-                $sl->get($options->getCache())
+                $this->serviceLocator->get($options->getCache())
             );
 
             /* @var $driver MappingDriver */
