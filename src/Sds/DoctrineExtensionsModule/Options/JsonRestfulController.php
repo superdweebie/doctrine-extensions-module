@@ -37,8 +37,6 @@ class JsonRestfulController extends AbstractController
 
     protected $surpressFlush;
 
-    protected $manifestName;
-
     public function getAcceptCriteria() {
         return $this->acceptCriteria;
     }
@@ -114,13 +112,5 @@ class JsonRestfulController extends AbstractController
 
     public function setSurpressFlush($surpressFlush) {
         $this->surpressFlush = (boolean) $surpressFlush;
-    }
-
-    public function getManifestName() {
-        return $this->manifestName;
-    }
-
-    public function setManifestName($manifestName) {
-        $this->manifestName = (string) $manifestName;
     }
 }

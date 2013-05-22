@@ -49,9 +49,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('author');
+        $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $author = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->find('harry');
         $this->assertFalse(isset($author));
@@ -72,9 +72,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('author');
+        $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $author = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->find('billy');
         $this->assertFalse(isset($author));
@@ -112,9 +112,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $country = $game->getPublisher()->getCountry();
@@ -136,9 +136,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $publisher = $game->getPublisher();
@@ -160,9 +160,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $this->documentManager->clear();
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
@@ -185,9 +185,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $this->documentManager->clear();
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
@@ -210,9 +210,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $country = $game->getAuthor()->getCountry();
@@ -234,9 +234,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $author = $game->getAuthor();
@@ -258,9 +258,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         foreach($game->getReviews() as $review){
@@ -287,9 +287,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $reviews = $game->getReviews();
@@ -312,9 +312,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('game');
+        $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $reviews = $game->getReviews();
@@ -336,9 +336,9 @@ class JsonRestfulControllerDeleteTest extends AbstractHttpControllerTestCase{
         $this->assertFalse(isset($result));
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('author');
+        $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $cursor = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->findAll();
 

@@ -6,8 +6,9 @@
 
 namespace Sds\DoctrineExtensionsModule\Controller;
 
-use Sds\DoctrineExtensions\Exception;
+use Sds\DoctrineExtensionsModule\Exception;
 use Sds\DoctrineExtensionsModule\Options\BatchJsonRestfulController as Options;
+use Sds\DoctrineExtensionsModule\RouteListener;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractRestfulController;
@@ -70,8 +71,10 @@ class BatchJsonRestfulController extends AbstractRestfulController
             $event->setRequest($request);
             $event->setResponse($response);
             $match = $router->match($request);
+            RouteListener::resolveController($match);
             $contentModel = null;
-            if (!isset($match) || $match->getMatchedRouteName() != 'rest'){
+
+            if (!isset($match) || ($match->getMatchedRouteName() != 'rest.' . $this->options->getManifestName())){
                 $contentModel = $this->createExceptionContentModel(
                     new Exception\RuntimeException(sprintf(
                         '%s uri is not a rest route, so is not supported by batch controller.', $requestData['uri']

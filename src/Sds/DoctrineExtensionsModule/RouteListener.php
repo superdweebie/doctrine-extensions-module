@@ -8,8 +8,8 @@ namespace Sds\DoctrineExtensionsModule;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
-use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch;
 
 /**
  *
@@ -52,7 +52,10 @@ class RouteListener implements ListenerAggregateInterface
 
     public function onRoute(MvcEvent $event)
     {
-        $routeMatch = $event->getRouteMatch();
+        self::resolveController($event->getRouteMatch());
+    }
+
+    public static function resolveController(RouteMatch $routeMatch) {
 
         if (($extension = $routeMatch->getParam('extension')) &&
             ($manifestName = $routeMatch->getParam('manifestName'))
@@ -60,7 +63,7 @@ class RouteListener implements ListenerAggregateInterface
             if ($endpoint = $routeMatch->getParam('endpoint')){
                 $routeMatch->setParam('controller', implode('.', [$extension, $manifestName, $endpoint]));
             } else {
-                $routeMatch->setParam('controller', implode('.', [$extension, $manifestName]));                  
+                $routeMatch->setParam('controller', implode('.', [$extension, $manifestName]));
             }
         }
     }

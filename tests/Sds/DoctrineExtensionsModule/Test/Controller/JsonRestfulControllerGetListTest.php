@@ -47,9 +47,9 @@ class JsonRestfulControllerGetListTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/author');
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('author');
+        $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
 
@@ -69,9 +69,9 @@ class JsonRestfulControllerGetListTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/author?select(name)');
 
         $this->assertResponseStatusCode(200);
-        $this->assertControllerName('author');
+        $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
 
@@ -327,9 +327,9 @@ class JsonRestfulControllerGetListTest extends AbstractHttpControllerTestCase{
         $this->dispatch('/rest/author');
 
         $this->assertResponseStatusCode(204);
-        $this->assertControllerName('author');
+        $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
-        $this->assertMatchedRouteName('rest');
+        $this->assertMatchedRouteName('rest.default');
 
         $result = json_decode($this->getResponse()->getContent(), true);
         $this->assertFalse(isset($result));

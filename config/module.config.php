@@ -124,10 +124,8 @@ return [
     ],
 
     'controllers' => [
-        'factories' => [
-            'rest.default.batch' => 'Sds\DoctrineExtensionsModule\Service\BatchRestControllerFactory'
-        ],
         'abstract_factories' => [
+            'Sds\DoctrineExtensionsModule\Service\BatchRestControllerAbstractFactory',
             'Sds\DoctrineExtensionsModule\Service\RestControllerAbstractFactory',
             'Sds\DoctrineExtensionsModule\Service\DojoControllerAbstractFactory'
         ]

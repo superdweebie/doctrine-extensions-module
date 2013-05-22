@@ -21,6 +21,8 @@ class AbstractController extends AbstractOptions
 
     protected $documentManager;
 
+    protected $manifestName;
+
     public function getServiceLocator() {
         return $this->serviceLocator;
     }
@@ -38,5 +40,13 @@ class AbstractController extends AbstractOptions
 
     public function setDocumentManager($documentManager) {
         $this->documentManager = $documentManager;
+    }
+
+    public function getManifestName() {
+        return $this->manifestName;
+    }
+
+    public function setManifestName($manifestName) {
+        $this->manifestName = (string) $manifestName;
     }
 }

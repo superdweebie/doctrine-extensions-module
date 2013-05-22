@@ -14,22 +14,40 @@
         }
     ],
     "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/superdweebie/zf2"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/superdweebie/DoctrineModule"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/superdweebie/DoctrineMongoODMModule"
+        }
+    ],
     "require": {
         "php": ">=5.4",
         "superdweebie/doctrine-extensions":   "~0.3",
         "superdweebie/exception-module":      "~0.3",
-        "doctrine/doctrine-mongo-odm-module": "dev-master",
-        "zendframework/zend-servicemanager":  "~2.1",
-        "zendframework/zend-modulemanager":   "~2.1",
-        "zendframework/zend-mvc":             "~2.1",
-        "zendframework/zend-http":            "~2.1",
-        "zendframework/zend-view":            "~2.1",
-        "zendframework/zend-stdlib":          "~2.1"
+        "doctrine/doctrine-mongo-odm-module": "~1.0",
+        "zendframework/zend-servicemanager":  "~2.2",
+        "zendframework/zend-modulemanager":   "~2.2",
+        "zendframework/zend-mvc":             "~2.2",
+        "zendframework/zend-http":            "~2.2",
+        "zendframework/zend-view":            "~2.2",
+        "zendframework/zend-stdlib":          "~2.2"
     },
     "require-dev": {
-        "zendframework/zendframework":        "dev-develop",
-        "superdweebie/doctrine-extensions":   "dev-develop",
-        "superdweebie/exception-module":      "dev-develop"
+        "zendframework/zendframework":        "dev-resolve-3823 as 2.2",
+        "doctrine/doctrine-mongo-odm-module": "dev-dev-1.0 as 1.0",
+        "doctrine/doctrine-module":           "dev-dev-1.0 as 1.0",
+        "superdweebie/doctrine-extensions":   "dev-develop as 0.3",
+        "superdweebie/exception-module":      "dev-develop as 0.3",
+        "superdweebie/common":                "dev-develop as 0.3",
+        "superdweebie/validator":             "dev-develop as 0.3"
     },
     "autoload": {
         "psr-0": {

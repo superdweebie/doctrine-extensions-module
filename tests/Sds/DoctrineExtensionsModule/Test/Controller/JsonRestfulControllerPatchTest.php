@@ -219,8 +219,9 @@ class JsonRestfulControllerPatchTest extends AbstractHttpControllerTestCase{
 
         $game = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game')->find('feed-the-kitty');
         $components = $game->getComponents();
-        $this->assertEquals('paper', $components[3]->getType());
-        $this->assertEquals('telescoping', $components[4]->getType());
+        $types = array_map(function($component){return $component->getType();}, $components->toArray());
+        $this->assertContains('paper', $types);
+        $this->assertContains('telescoping', $types);
         $this->assertTrue(2 < count($components));
     }
 
