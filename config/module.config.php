@@ -41,35 +41,35 @@ return [
             ]
         ],
         'exception' => [
-            'exceptionMap' => [
+            'exception_map' => [
                 'Sds\DoctrineExtensionsModule\Exception\FlushException' => [
-                    'describedBy' => 'flush-exception',
+                    'described_by' => 'flush-exception',
                     'title' => 'Exception occured when writing data to the database',
-                    'extensionFields' => ['innerExceptions']
+                    'extension_fields' => ['innerExceptions']
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException' => [
-                    'describedBy' => 'document-not-found',
+                    'described_by' => 'document-not-found',
                     'title' => 'Document not found',
-                    'statusCode' => 404
+                    'status_code' => 404
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\BadRangeException' => [
-                    'describedBy' => 'bad-range',
+                    'described_by' => 'bad-range',
                     'title' => 'Requested range cannot be returned',
-                    'statusCode' => 416
+                    'status_code' => 416
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\InvalidDocumentException' => [
-                    'describedBy' => 'document-validation-failed',
+                    'described_by' => 'document-validation-failed',
                     'title' => 'Document validation failed',
-                    'extensionFields' => ['validatorMessages']
+                    'extension_fields' => ['validatorMessages']
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\DocumentAlreadyExistsException' => [
-                    'describedBy' => 'document-already-exists',
+                    'described_by' => 'document-already-exists',
                     'title' => 'Document already exists'
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\AccessControlException' => [
-                    'describedBy' => 'access-control-exception',
+                    'described_by' => 'access-control-exception',
                     'title' => 'Access denied',
-                    'statusCode' => 403,
+                    'status_code' => 403,
                     'action' => ['action']
                 ]
             ]
