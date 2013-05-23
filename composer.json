@@ -1,12 +1,13 @@
 {
     "name": "superdweebie/doctrine-extensions-module",
+    "version": "0.3",
     "description": "Zend Framework 2 Module that provides Sds DoctrineExtensions functionality",
     "type": "library",
     "keywords": [
         "doctrine",
         "zf2"
     ],
-    "homepage": "http://github.com/superdweebie/doctrineExtensionsModule",
+    "homepage": "http://github.com/superdweebie/doctrine-extensions-module",
     "authors": [
         {
             "name": "Tim Roediger",
@@ -39,15 +40,6 @@
         "zendframework/zend-http":            "~2.2",
         "zendframework/zend-view":            "~2.2",
         "zendframework/zend-stdlib":          "~2.2"
-    },
-    "require-dev": {
-        "zendframework/zendframework":        "dev-resolve-3823 as 2.2",
-        "doctrine/doctrine-mongo-odm-module": "dev-dev-1.0 as 1.0",
-        "doctrine/doctrine-module":           "dev-dev-1.0 as 1.0",
-        "superdweebie/doctrine-extensions":   "dev-develop as 0.3",
-        "superdweebie/exception-module":      "dev-develop as 0.3",
-        "superdweebie/common":                "dev-develop as 0.3",
-        "superdweebie/validator":             "dev-develop as 0.3"
     },
     "autoload": {
         "psr-0": {
