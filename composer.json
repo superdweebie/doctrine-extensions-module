@@ -41,6 +41,9 @@
         "zendframework/zend-view":            "~2.2",
         "zendframework/zend-stdlib":          "~2.2"
     },
+    "require-dev": {
+        "zendframework/zend-test":            "~2.2"
+    },
     "autoload": {
         "psr-0": {
             "Sds\\DoctrineExtensionsModule": "src/"
