@@ -11,7 +11,7 @@ namespace Sds\DoctrineExtensionsModule\Options;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class DojoController extends AbstractController
+class DojoControllerOptions extends AbstractControllerOptions
 {
     protected $generator;
 

@@ -7,7 +7,7 @@
 namespace Sds\DoctrineExtensionsModule\Controller;
 
 use Sds\DoctrineExtensionsModule\Exception;
-use Sds\DoctrineExtensionsModule\Options\BatchJsonRestfulController as Options;
+use Sds\DoctrineExtensionsModule\Options\BatchJsonRestfulControllerOptions;
 use Sds\DoctrineExtensionsModule\RouteListener;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -27,13 +27,13 @@ class BatchJsonRestfulController extends AbstractRestfulController
         return $this->options;
     }
 
-    public function setOptions(Options $options) {
+    public function setOptions(BatchJsonRestfulControllerOptions $options) {
         $this->options = $options;
     }
 
-    public function __construct(Options $options = null) {
+    public function __construct(BatchJsonRestfulControllerOptions $options = null) {
         if (!isset($options)){
-            $options = new Options;
+            $options = new BatchJsonRestfulControllerOptions;
         }
         $this->setOptions($options);
     }

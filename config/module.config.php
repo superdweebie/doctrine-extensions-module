@@ -80,7 +80,7 @@ return [
         'odm' => [
             'configuration' => [
                 'default' => [
-                    'classMetadataFactoryName' => 'Sds\DoctrineExtensions\ClassMetadataFactory'
+                    'class_metadata_factory_name' => 'Sds\DoctrineExtensions\ClassMetadataFactory'
                 ]
             ],
         ]
@@ -133,7 +133,7 @@ return [
 
     'service_manager' => [
         'invokables' => [
-            'doctrine.factory.driver' => 'Sds\DoctrineExtensionsModule\Factory\DriverFactory',
+            'doctrine.builder.driver' => 'Sds\DoctrineExtensionsModule\Builder\DriverBuilder',
         ],
         'abstract_factories' => [
             'Sds\DoctrineExtensionsModule\Service\DoctrineExtensionsServiceAbstractFactory'

@@ -18,7 +18,10 @@ class IdentityAbstractFactory implements AbstractFactoryInterface
 {
 
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName){
-        if ($name == 'identity' && $serviceLocator->has('Zend\Authentication\AuthenticationService')){
+        if ($name == 'identity' &&
+            $serviceLocator->has('Zend\Authentication\AuthenticationService') &&
+            $serviceLocator->get('Zend\Authentication\AuthenticationService')->hasIdentity()
+        ){
             return true;
         }
     }

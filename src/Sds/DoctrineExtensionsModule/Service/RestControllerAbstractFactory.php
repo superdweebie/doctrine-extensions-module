@@ -33,11 +33,11 @@ class RestControllerAbstractFactory implements AbstractFactoryInterface
         $factoryMapping = $this->getFactoryMapping($name);
 
         $options = new Options([
-            'endPoint' => $factoryMapping['endpoint'],
-            'documentClass' => $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator)->get($factoryMapping['endpoint'])['className'],
-            'documentManager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$factoryMapping['manifestName']]['document_manager'],
-            'manifestName' => $factoryMapping['manifestName'],
-            'serviceLocator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $factoryMapping['manifestName'] . '.serviceManager')
+            'end_point' => $factoryMapping['endpoint'],
+            'document_class' => $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator)->get($factoryMapping['endpoint'])['className'],
+            'document_manager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$factoryMapping['manifestName']]['document_manager'],
+            'manifest_name' => $factoryMapping['manifestName'],
+            'service_locator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $factoryMapping['manifestName'] . '.serviceManager')
         ]);
         return new JsonRestfulController($options);
     }

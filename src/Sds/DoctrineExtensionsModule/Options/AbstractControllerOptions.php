@@ -14,7 +14,7 @@ use Zend\Stdlib\AbstractOptions;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AbstractController extends AbstractOptions
+class AbstractControllerOptions extends AbstractOptions
 {
 
     protected $serviceLocator;
@@ -67,7 +67,7 @@ class AbstractController extends AbstractOptions
     }
 
     /**
-     * 
+     *
      * @param string $manifestName
      */
     public function setManifestName($manifestName) {

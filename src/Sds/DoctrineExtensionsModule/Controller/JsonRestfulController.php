@@ -18,7 +18,7 @@ use Sds\DoctrineExtensions\State\Events as StateEvents;
 use Sds\DoctrineExtensions\Validator\Events as ValidatorEvents;
 use Sds\DoctrineExtensions\Validator\EventArgs as ValidatorEventArgs;
 use Sds\DoctrineExtensionsModule\Exception;
-use Sds\DoctrineExtensionsModule\Options\JsonRestfulController as Options;
+use Sds\DoctrineExtensionsModule\Options\JsonRestfulControllerOptions;
 use Zend\Http\Header\CacheControl;
 use Zend\Http\Header\ContentRange;
 use Zend\Http\Header\Location;
@@ -78,13 +78,13 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
         return $this->options;
     }
 
-    public function setOptions(Options $options) {
+    public function setOptions(JsonRestfulControllerOptions $options) {
         $this->options = $options;
     }
 
-    public function __construct(Options $options = null) {
+    public function __construct(JsonRestfulControllerOptions $options = null) {
         if (!isset($options)){
-            $options = new Options;
+            $options = new JsonRestfulControllerOptions;
         }
         $this->setOptions($options);
     }

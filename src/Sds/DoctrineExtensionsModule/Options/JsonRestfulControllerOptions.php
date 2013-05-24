@@ -11,7 +11,7 @@ namespace Sds\DoctrineExtensionsModule\Options;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class JsonRestfulController extends AbstractController
+class JsonRestfulControllerOptions extends AbstractControllerOptions
 {
 
     protected $acceptCriteria = [

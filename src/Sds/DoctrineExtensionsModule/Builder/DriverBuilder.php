@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Sds\DoctrineExtensionsModule\Factory;
+namespace Sds\DoctrineExtensionsModule\Builder;
 
 use InvalidArgumentException;
 use Doctrine\Common\Annotations;
@@ -25,7 +25,8 @@ use Doctrine\Common\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver;
 use Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator;
-use DoctrineModule\Factory\AbstractFactoryInterface;
+use DoctrineModule\Builder\BuilderInterface;
+use DoctrineModule\Options\DriverOptions;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -36,10 +37,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @link    http://www.doctrine-project.org/
  * @author  Kyle Spraggs <theman@spiffyjr.me>
  */
-class DriverFactory implements AbstractFactoryInterface, ServiceLocatorAwareInterface
+class DriverBuilder implements BuilderInterface, ServiceLocatorAwareInterface
 {
-
-    const OPTIONS_CLASS = '\DoctrineModule\Options\Driver';
 
     protected $serviceLocator;
 
@@ -61,14 +60,11 @@ class DriverFactory implements AbstractFactoryInterface, ServiceLocatorAwareInte
      * {@inheritDoc}
      * @return MappingDriver
      */
-    public function create($options)
+    public function build($options)
     {
-
-        $optionsClass = self::OPTIONS_CLASS;
-
         if (is_array($options) || $options instanceof \Traversable){
-            $options = new $optionsClass($options);
-        } else if ( ! $options instanceof $optionsClass){
+            $options = new DriverOptions($options);
+        } else if ( ! $options instanceof DriverOptions){
             throw new \InvalidArgumentException();
         }
 
