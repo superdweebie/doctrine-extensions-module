@@ -6,17 +6,18 @@
  */
 namespace Sds\DoctrineExtensionsModule;
 
+use Sds\DoctrineExtensions\Manifest;
+
 trait ManifestAwareTrait
 {
 
     protected $manifestName;
 
-    protected $manifestConfig;
+    protected $manifest;
 
     public function setManifestName($manifestName)
     {
         $this->manifestName = $manifestName;
-        return $this;
     }
 
     public function getManifestName()
@@ -24,14 +25,13 @@ trait ManifestAwareTrait
         return $this->manifestName;
     }
 
-    public function setManifestConfig(array $manifestConfig)
+    public function setManifest(Manifest $manifest)
     {
-        $this->manifestConfig = $manifestConfig;
-        return $this;
+        $this->manifest = $manifest;
     }
 
-    public function getManifestConfig()
+    public function getManifest()
     {
-        return $this->manifestConfig;
+        return $this->manifest;
     }
 }

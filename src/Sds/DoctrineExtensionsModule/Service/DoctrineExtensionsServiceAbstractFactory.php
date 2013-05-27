@@ -43,9 +43,8 @@ class DoctrineExtensionsServiceAbstractFactory implements AbstractFactoryInterfa
         }
         $instance = $manifestServiceManager->get($factoryMapping['serviceName']);
         if ($instance instanceof ManifestAwareInterface){
-            $instance
-                ->setManifestName($factoryMapping['manifestName'])
-                ->setManifestConfig($manifestServiceManager->get('manifest'));
+            $instance->setManifestName($factoryMapping['manifestName']);
+            $instance->setManifest($manifestServiceManager->get('manifest'));
         }
         return $instance;
     }
@@ -69,7 +68,7 @@ class DoctrineExtensionsServiceAbstractFactory implements AbstractFactoryInterfa
             $config = $serviceLocator->get('config')['sds']['doctrineExtensions']['manifest'];
             if (isset($config[$manifestName])){
                 $manifestServiceManager = Manifest::createServiceManager($config[$manifestName]['service_manager_config']);
-                $manifestServiceManager->setService('manifest', $config[$manifestName]);
+                $manifestServiceManager->setService('manifest', new Manifest($config[$manifestName]));
                 $manifestServiceManager->addPeeringServiceManager($serviceLocator);
                 $this->manifestServiceManagers[$manifestName] = $manifestServiceManager;
             } else {

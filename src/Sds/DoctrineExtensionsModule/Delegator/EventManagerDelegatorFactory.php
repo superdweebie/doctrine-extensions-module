@@ -31,7 +31,7 @@ class EventManagerDelegatorFactory implements DelegatorFactoryInterface, Manifes
         } else {
             $this->eventManagers[$name] = call_user_func($callback);
             $manifestServiceManager = $serviceLocator->get('doctrineExtensions.' . $this->manifestName . '.serviceManager');
-            foreach ($this->manifestConfig['subscribers'] as $subscriber){
+            foreach ($this->manifest->getSubscribers() as $subscriber){
                 $this->eventManagers[$name]->addEventSubscriber($manifestServiceManager->get($subscriber));
             }
         }

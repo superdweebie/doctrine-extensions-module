@@ -5,6 +5,8 @@
  */
 namespace Sds\DoctrineExtensionsModule\Options;
 
+use Sds\DoctrineExtensions\Rest\EndpointMap;
+
 /**
  *
  * @since   1.0
@@ -36,6 +38,8 @@ class JsonRestfulControllerOptions extends AbstractControllerOptions
     protected $exceptionSerializer = 'Sds\ExceptionModule\JsonExceptionStrategy';
 
     protected $surpressFlush;
+
+    protected $endpointMap;
 
     public function getAcceptCriteria() {
         return $this->acceptCriteria;
@@ -112,5 +116,13 @@ class JsonRestfulControllerOptions extends AbstractControllerOptions
 
     public function setSurpressFlush($surpressFlush) {
         $this->surpressFlush = (boolean) $surpressFlush;
+    }
+
+    public function getEndpointMap() {
+        return $this->endpointMap;
+    }
+
+    public function setEndpointMap(EndpointMap $endpointMap) {
+        $this->endpointMap = $endpointMap;
     }
 }

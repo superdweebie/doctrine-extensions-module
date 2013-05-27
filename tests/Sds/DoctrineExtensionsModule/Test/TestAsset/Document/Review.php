@@ -10,7 +10,6 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
 /**
  * @ODM\Document
- * @Sds\Rest
  * @Sds\Permission\Basic(roles="all", allow="all")
  */
 class Review {

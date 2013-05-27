@@ -11,8 +11,6 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
 /**
  * @ODM\Document
- * @Sds\Rest
- * @Sds\Rest\Cache(noCache=true, public=false)
  * @Sds\Permission\Basic(roles="all", allow="all")
  */
 class Game {

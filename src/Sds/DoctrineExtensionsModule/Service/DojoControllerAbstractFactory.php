@@ -6,7 +6,7 @@
 namespace Sds\DoctrineExtensionsModule\Service;
 
 use Sds\DoctrineExtensionsModule\Controller\DojoController;
-use Sds\DoctrineExtensionsModule\Options\DojoController as Options;
+use Sds\DoctrineExtensionsModule\Options\DojoControllerOptions;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -35,7 +35,7 @@ class DojoControllerAbstractFactory implements AbstractFactoryInterface
     {
         $manifestName = $this->getManifestName($name);
 
-        $options = new Options([
+        $options = new DojoControllerOptions([
             'generator' => 'doctrineExtensions.' . $manifestName . '.generator',
             'documentManager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$manifestName]['document_manager'],
             'serviceLocator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $manifestName . '.serviceManager')

@@ -22,7 +22,20 @@ return [
                         'extension.owner' => true,
                         'extension.readonly' => true,
                         'extension.reference' => true,
-                        'extension.rest' => true,
+                        'extension.rest' => [
+                            'endpoint_map' => [
+                                'game' => [
+                                    'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game',
+                                    'cache' => [
+                                        'no_cache' => true
+                                    ]
+                                ],
+                                'author'  => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author',
+                                'country' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Country',
+                                'review'  => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Review',
+                                'user'    => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\User'
+                            ]
+                        ],
                         'extension.serializer' => [
                             'maxNestingDepth' => 2
                         ],

@@ -6,7 +6,7 @@
 namespace Sds\DoctrineExtensionsModule\Service;
 
 use Sds\DoctrineExtensionsModule\Controller\JsonRestfulController;
-use Sds\DoctrineExtensionsModule\Options\JsonRestfulController as Options;
+use Sds\DoctrineExtensionsModule\Options\JsonRestfulControllerOptions;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -18,7 +18,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class RestControllerAbstractFactory implements AbstractFactoryInterface
 {
-
     protected $endpointMap;
 
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName){
@@ -32,12 +31,14 @@ class RestControllerAbstractFactory implements AbstractFactoryInterface
 
         $factoryMapping = $this->getFactoryMapping($name);
 
-        $options = new Options([
-            'end_point' => $factoryMapping['endpoint'],
-            'document_class' => $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator)->get($factoryMapping['endpoint'])['className'],
+        $endpointMap = $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator);
+        $options = new JsonRestfulControllerOptions([
+            'end_point'        => $factoryMapping['endpoint'],
+            'endpoint_map'     => $endpointMap,
+            'document_class'   => $endpointMap->getClass($factoryMapping['endpoint']),
             'document_manager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$factoryMapping['manifestName']]['document_manager'],
-            'manifest_name' => $factoryMapping['manifestName'],
-            'service_locator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $factoryMapping['manifestName'] . '.serviceManager')
+            'manifest_name'    => $factoryMapping['manifestName'],
+            'service_locator'  => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $factoryMapping['manifestName'] . '.serviceManager')
         ]);
         return new JsonRestfulController($options);
     }

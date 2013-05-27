@@ -32,11 +32,11 @@ class ConfigurationDelegatorFactory implements DelegatorFactoryInterface, Manife
             return $this->configurations[$name];
         } else {
             $this->configurations[$name] = call_user_func($callback);
-            foreach ($this->manifestConfig['filters'] as $filterName => $filterClass){
+            foreach ($this->manifest->getFilters() as $filterName => $filterClass){
                 $this->configurations[$name]->addFilter($filterName, $filterClass);
             }
             $chain = $this->configurations[$name]->getMetadataDriverImpl();
-            foreach ($this->manifestConfig['documents'] as $namespace => $path){
+            foreach ($this->manifest->getDocuments() as $namespace => $path){
                 $driver = new AnnotationDriver(new AnnotationReader, $path);
                 $chain->addDriver($driver, $namespace);
             }

@@ -6,6 +6,8 @@
  */
 namespace Sds\DoctrineExtensionsModule;
 
+use Sds\DoctrineExtensions\Manifest;
+
 interface ManifestAwareInterface
 {
 
@@ -13,7 +15,7 @@ interface ManifestAwareInterface
 
     public function getManifestName();
 
-    public function setManifestConfig(array $manifestConfig);
+    public function setManifest(Manifest $manifest);
 
-    public function getManifestConfig();
+    public function getManifest();
 }

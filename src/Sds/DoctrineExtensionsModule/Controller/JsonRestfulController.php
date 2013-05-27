@@ -233,8 +233,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
 
         if (isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'many'){
             $this->request->getQuery()->set($metadata->fieldMappings[$field]['mappedBy'], $document);
+            $endpoint = $this->options
+                ->getEndpointMap()
+                ->getEndpoints($this->getFieldMetadata($metadata, $field)->name)[0];
             return $this->forward()->dispatch(
-                'rest.' . $this->options->getManifestName() . '.' . $this->getFieldMetadata($metadata, $field)->rest['endpoint'],
+                'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                 [
                     'id' => implode('/', $deeperResource),
                     'surpressResponse' => true
@@ -264,8 +267,15 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                     throw new Exception\DocumentNotFoundException;
                 }
                 array_unshift($deeperResource, $this->getDocumentId($fieldValue));
+                $endpoint = $this->options
+                    ->getEndpointMap()
+                    ->getEndpoints(
+                         $documentManager->getClassMetadata(
+                             $metadata->fieldMappings[$field]['targetDocument']
+                          )->name
+                    )[0];
                 return $this->forward()->dispatch(
-                    'rest.' . $this->options->getManifestName() . '.' . $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
+                    'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                     [
                         'id' => implode('/', $deeperResource),
                         'surpressResponse' => true
@@ -303,13 +313,22 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
     protected function completeGet(array $document, ClassMetadata $metadata){
         $serializer = $this->options->getSerializer();
 
-        if (isset($metadata->rest['cache'])){
-            $cacheControl = new CacheControl;
-            foreach ($metadata->rest['cache'] as $key => $value){
-                $cacheControl->addDirective($key, $value);
-            }
-            $this->response->getHeaders()->addHeader($cacheControl);
+        $cacheOptions = $this->options->getEndpointMap()->getCacheOptions(null, $metadata->name);
+        $cacheControl = new CacheControl;
+        if ($cacheOptions->getPublic()){
+            $cacheControl->addDirective('public', true);
         }
+        if ($cacheOptions->getPrivate()){
+            $cacheControl->addDirective('private', true);
+        }
+        if ($cacheOptions->getNoCache()){
+            $cacheControl->addDirective('no-cache', true);
+        }
+        if ($cacheOptions->getMaxAge()){
+            $cacheControl->addDirective('max-age', $cacheOptions->getMaxAge());
+        }
+        $this->response->getHeaders()->addHeader($cacheControl);
+
         if (isset($metadata->stamp['updatedOn'])){
             $lastModified = new LastModified;
             $sec = $document[$metadata->stamp['updatedOn']]->sec;
@@ -398,8 +417,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
             case isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'many':
                 $referencedMetadata = $this->getFieldMetadata($metadata, $field);
                 try {
+                    $endpoint = $this->options
+                        ->getEndpointMap()
+                        ->getEndpoints($referencedMetadata->name)[0];
                     $createdDocument = $this->forward()->dispatch(
-                        'rest.' . $this->options->getManifestName() . '.' . $referencedMetadata->rest['endpoint'],
+                        'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                         [
                             'id' => implode('/', $deeperResource),
                             'surpressResponse' => true
@@ -424,8 +446,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                     throw new Exception\DocumentNotFoundException;
                 }
                 array_unshift($deeperResource, $this->getDocumentId($fieldValue));
+                $endpoint = $this->options
+                    ->getEndpointMap()
+                    ->getEndpoints($documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->name)[0];
                 return $this->forward()->dispatch(
-                    'rest.' . $this->options->getManifestName() . '.' . $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
+                    'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                     [
                         'id' => implode('/', $deeperResource),
                         'surpressResponse' => true
@@ -570,8 +595,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
 
         if (isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'many'){
             $referencedMetadata = $this->getFieldMetadata($metadata, $field);
+            $endpoint = $this->options
+                ->getEndpointMap()
+                ->getEndpoints($referencedMetadata->name)[0];
             $referencedDocuments = $this->forward()->dispatch(
-                'rest.' . $this->options->getManifestName() . '.' . $referencedMetadata->rest['endpoint'],
+                'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                 [
                     'id' => implode('/', $deeperResource),
                     'surpressResponse' => true
@@ -613,8 +641,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 }
 
                 array_unshift($deeperResource, $referenceId);
+                $endpoint = $this->options
+                    ->getEndpointMap()
+                    ->getEndpoints($referenceMetadata->name)[0];
                 $updatedDocument = $this->forward()->dispatch(
-                    'rest.' . $this->options->getManifestName() . '.' . $referenceMetadata->rest['endpoint'],
+                    'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                     [
                         'id' => implode('/', $deeperResource),
                         'surpressResponse' => true
@@ -762,8 +793,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
 
         if (isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'many'){
             $referencedMetadata = $this->getFieldMetadata($metadata, $field);
+            $endpoint = $this->options
+                ->getEndpointMap()
+                ->getEndpoints($referencedMetadata->name)[0];
             $referencedDocuments = $this->forward()->dispatch(
-                'rest.' . $this->options->getManifestName() . '.' . $referencedMetadata->rest['endpoint'],
+                'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                 [
                     'id' => implode('/', $deeperResource),
                     'surpressResponse' => true
@@ -805,8 +839,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                 }
 
                 array_unshift($deeperResource, $referenceId);
+                $endpoint = $this->options
+                    ->getEndpointMap()
+                    ->getEndpoints($referenceMetadata->name)[0];
                 $patchedDocument = $this->forward()->dispatch(
-                    'rest.' . $this->options->getManifestName() . '.' . $referenceMetadata->rest['endpoint'],
+                    'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                     [
                         'id' => implode('/', $deeperResource),
                         'surpressResponse' => true
@@ -959,8 +996,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
         $mapping = $metadata->fieldMappings[$field];
 
         if (isset($mapping['reference']) && $mapping['reference'] && $mapping['type'] == 'many'){
+            $endpoint = $this->options
+                ->getEndpointMap()
+                ->getEndpoints($this->getFieldMetadata($metadata, $field)->name)[0];
             return $this->forward()->dispatch(
-                'rest.' . $this->options->getManifestName() . '.' . $this->getFieldMetadata($metadata, $field)->rest['endpoint'],
+                'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                 [
                     'id' => implode('/', $deeperResource),
                     'surpressResponse' => true
@@ -994,8 +1034,11 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
                         throw new Exception\DocumentNotFoundException;
                     }
                     array_unshift($deeperResource, $this->getDocumentId($fieldValue));
+                    $endpoint = $this->options
+                        ->getEndpointMap()
+                        ->getEndpoints($documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->name)[0];
                     return $this->forward()->dispatch(
-                        'rest.' . $this->options->getManifestName() . '.' . $documentManager->getClassMetadata($metadata->fieldMappings[$field]['targetDocument'])->rest['endpoint'],
+                        'rest.' . $this->options->getManifestName() . '.' . $endpoint,
                         [
                             'id' => implode('/', $deeperResource),
                             'surpressResponse' => true

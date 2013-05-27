@@ -6,7 +6,7 @@
 namespace Sds\DoctrineExtensionsModule\Service;
 
 use Sds\DoctrineExtensionsModule\Controller\BatchJsonRestfulController;
-use Sds\DoctrineExtensionsModule\Options\BatchJsonRestfulController as Options;
+use Sds\DoctrineExtensionsModule\Options\BatchJsonRestfulControllerOptions;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -27,7 +27,7 @@ class BatchRestControllerAbstractFactory implements AbstractFactoryInterface
 
         $manifestName = $this->getManifestName($name);
 
-        $options = new Options([
+        $options = new BatchJsonRestfulControllerOptions([
             'documentManager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$manifestName]['document_manager'],
             'manifestName' => $manifestName,
             'serviceLocator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $manifestName . '.serviceManager')
