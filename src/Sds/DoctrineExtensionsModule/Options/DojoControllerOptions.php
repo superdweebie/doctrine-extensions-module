@@ -13,16 +13,16 @@ namespace Sds\DoctrineExtensionsModule\Options;
  */
 class DojoControllerOptions extends AbstractControllerOptions
 {
-    protected $generator;
+    protected $resourceMap;
 
-    public function getGenerator() {
-        if (is_string($this->generator)) {
-            $this->generator = $this->serviceLocator->get($this->generator);
+    public function getResourceMap() {
+        if (is_string($this->resourceMap)) {
+            $this->resourceMap = $this->serviceLocator->get($this->resourceMap);
         }
-        return $this->generator;
+        return $this->resourceMap;
     }
 
-    public function setGenerator($generator) {
-        $this->generator = $generator;
+    public function setResourceMap($resourceMap) {
+        $this->resourceMap = $resourceMap;
     }
 }

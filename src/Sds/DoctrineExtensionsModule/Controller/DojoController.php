@@ -8,6 +8,7 @@ namespace Sds\DoctrineExtensionsModule\Controller;
 
 use Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException;
 use Sds\DoctrineExtensionsModule\Options\DojoControllerOptions;
+use Zend\Http\Header\ContentType;
 use Zend\Mvc\Controller\AbstractActionController;
 
 class DojoController extends AbstractActionController
@@ -34,15 +35,16 @@ class DojoController extends AbstractActionController
     {
         $module = $this->getEvent()->getRouteMatch()->getParam('module');
 
-        $generator = $this->options->getGenerator();
+        $resourceMap = $this->options->getResourceMap();
 
-        if ( ! $generator->canGenerate($module)){
+        if ( ! $resourceMap->has($module)){
             throw new DocumentNotFoundException();
         }
 
         $response = $this->getResponse();
+        $response->setContent($resourceMap->get($module));
+        $response->getHeaders()->addHeader(ContentType::fromString('Content-type: application/javascript'));
         $response->setStatusCode(200);
-        $response->setContent($generator->generate($module));
         return $response;
     }
 }

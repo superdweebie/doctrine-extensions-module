@@ -9,15 +9,17 @@ return [
                         'extension.annotation' => true,
                         'extension.crypt' => true,
                         'extension.dojo' => [
-                            'filePaths' => [
-                                'all' => [
-                                    'filter' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document',
-                                    'path' => 'data'
-                                ],
-                            ],
+                            'persist_to_file' => false
                         ],
                         'extension.freeze' => true,
-                        'extension.generator' => true,
+                        'extension.generator' => [
+                            'resource_map' => [
+                                'Sds/Document/Author.js' => [
+                                    'generator' => 'generator.dojo.model',
+                                    'class'     => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author'
+                                ],
+                            ]
+                        ],
                         'extension.identity' => true,
                         'extension.owner' => true,
                         'extension.readonly' => true,

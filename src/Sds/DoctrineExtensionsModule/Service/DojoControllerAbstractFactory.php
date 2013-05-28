@@ -36,9 +36,9 @@ class DojoControllerAbstractFactory implements AbstractFactoryInterface
         $manifestName = $this->getManifestName($name);
 
         $options = new DojoControllerOptions([
-            'generator' => 'doctrineExtensions.' . $manifestName . '.generator',
-            'documentManager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$manifestName]['document_manager'],
-            'serviceLocator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $manifestName . '.serviceManager')
+            'resource_map' => 'resourcemap',
+            'document_manager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$manifestName]['document_manager'],
+            'service_locator' => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $manifestName . '.serviceManager')
         ]);
 
         return new DojoController($options);
