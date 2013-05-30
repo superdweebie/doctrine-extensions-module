@@ -22,7 +22,6 @@ return [
                         ],
                         'extension.identity' => true,
                         'extension.owner' => true,
-                        'extension.readonly' => true,
                         'extension.reference' => true,
                         'extension.rest' => [
                             'endpoint_map' => [

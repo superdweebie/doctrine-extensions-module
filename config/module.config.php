@@ -18,7 +18,6 @@ return [
 //                        'extension.generator' => true,
 //                        'extension.identity' => true,
 //                        'extension.owner' => true,
-//                        'extension.readonly' => true,
 //                        'extension.reference' => true,
 //                        'extension.rest' => true,
 //                        'extension.serializer' => true,
@@ -132,9 +131,6 @@ return [
     ],
 
     'service_manager' => [
-        'invokables' => [
-            'doctrine.builder.driver' => 'Sds\DoctrineExtensionsModule\Builder\DriverBuilder',
-        ],
         'abstract_factories' => [
             'Sds\DoctrineExtensionsModule\Service\DoctrineExtensionsServiceAbstractFactory'
         ]

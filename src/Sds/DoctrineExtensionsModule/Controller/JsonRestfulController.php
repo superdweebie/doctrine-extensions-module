@@ -10,7 +10,6 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
 use Doctrine\ODM\MongoDB\Proxy\Proxy;
 use Sds\DoctrineExtensions\AccessControl\Events as AccessControlEvents;
 use Sds\DoctrineExtensions\AccessControl\EventArgs as AccessControlEventArgs;
-use Sds\DoctrineExtensions\Identity\Events as IdentityEvents;
 use Sds\DoctrineExtensions\Freeze\Events as FreezeEvents;
 use Sds\DoctrineExtensions\Serializer\Serializer;
 use Sds\DoctrineExtensions\SoftDelete\Events as SoftDeleteEvents;
@@ -49,7 +48,6 @@ class JsonRestfulController extends AbstractRestfulController implements EventSu
             AccessControlEvents::createDenied,
             AccessControlEvents::updateDenied,
             AccessControlEvents::deleteDenied,
-            IdentityEvents::updateRolesDenied,
             FreezeEvents::freezeDenied,
             FreezeEvents::thawDenied,
             FreezeEvents::frozenUpdateDenied,
