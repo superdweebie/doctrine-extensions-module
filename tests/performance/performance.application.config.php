@@ -11,8 +11,8 @@ return array(
             __DIR__ . '/../test.module.config.php',
             __DIR__ . '/performance.module.config.php',
         ),
-        //'config_cache_enabled' => true,
-        'config_cache_enabled' => false,
+        'config_cache_enabled' => true,
+        //'config_cache_enabled' => false,
         'cache_dir' => __DIR__ . '/cache',
         'check_dependencies' => false
     ),

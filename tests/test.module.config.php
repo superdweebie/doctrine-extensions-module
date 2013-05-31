@@ -9,7 +9,7 @@ return [
                         'extension.annotation' => true,
                         'extension.crypt' => true,
                         'extension.dojo' => [
-                            'persist_to_file' => false
+                            'flat_file_strategy' => 'ignore'
                         ],
                         'extension.freeze' => true,
                         'extension.generator' => [

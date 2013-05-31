@@ -82,6 +82,11 @@ return [
                     'class_metadata_factory_name' => 'Sds\DoctrineExtensions\ClassMetadataFactory'
                 ]
             ],
+        ],
+        'cache' => [
+            'phpfileserialize' => [
+                'directory' => 'data/DoctrineModule/cache',
+            ]
         ]
     ],
 
@@ -131,6 +136,9 @@ return [
     ],
 
     'service_manager' => [
+        'factories' => [
+            'doctrine.cache.phpfileserialize' => 'Sds\DoctrineExtensionsModule\Service\PhpFileSerializeCacheFactory',
+        ],
         'abstract_factories' => [
             'Sds\DoctrineExtensionsModule\Service\DoctrineExtensionsServiceAbstractFactory'
         ]

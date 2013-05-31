@@ -5,11 +5,11 @@ return [
     'sds' => [
         'doctrineExtensions' => [
             'extensionConfigs' => [
-                'Sds\DoctrineExtensions\Dojo' => false,
-                'Sds\DoctrineExtensions\Freeze' => false,
-                'Sds\DoctrineExtensions\SoftDelete' => false,
-                'Sds\DoctrineExtensions\State' => false,
-                'Sds\DoctrineExtensions\Zone' => false,
+                'extension.dojo' => false,
+                'extension.freeze' => false,
+                'extension.softdelete' => false,
+                'extension.state' => false,
+                'extension.zone' => false,
             ],
         ],
     ],
@@ -18,18 +18,17 @@ return [
         'odm' => [
             'configuration' => [
                 'default' => [
-                    'metadata_cache'     => 'memcache',
-                    //'metadata_cache'     => 'filesystem',
-                    'metadata_cache'     => 'array',
+                    //'metadata_cache'     => 'doctrine.cache.memcache',
+                    'metadata_cache'     => 'doctrine.cache.phpfileserialize',
+                    //'metadata_cache'     => 'doctrine.cache.array',
                     'generate_proxies'   => false,
                     'generate_hydrators' => false,
                 ],
             ],
         ],
         'cache' => [
-            'filesystem' => [
-                'class' => 'Doctrine\Common\Cache\PhpFileSerializeCache',
-                'directory' => __DIR__ . '/cache/doctrine'
+            'phpfileserialize' => [
+                'directory' => __DIR__ . '/cache/doctrine',
             ]
         ]
     ],
