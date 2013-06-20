@@ -177,10 +177,10 @@ class JsonRestfulControllerCreateTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/game/seven-wonders/components');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(500);
         $this->assertEquals('Content-Type: application/api-problem+json', $this->getResponse()->getHeaders()->get('Content-Type')->toString());
-
-        $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertEquals('/exception/document-already-exists', $result['describedBy']);
         $this->assertEquals('Document already exists', $result['title']);

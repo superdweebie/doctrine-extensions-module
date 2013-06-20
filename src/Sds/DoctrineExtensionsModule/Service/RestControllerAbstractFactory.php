@@ -6,6 +6,7 @@
 namespace Sds\DoctrineExtensionsModule\Service;
 
 use Sds\DoctrineExtensionsModule\Controller\JsonRestfulController;
+use Sds\DoctrineExtensionsModule\Controller\JsonRestfulController\DoctrineSubscriber;
 use Sds\DoctrineExtensionsModule\Options\JsonRestfulControllerOptions;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -22,7 +23,7 @@ class RestControllerAbstractFactory implements AbstractFactoryInterface
 
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName){
         if ($factoryMapping = $this->getFactoryMapping($name)){
-            return $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator)->has($factoryMapping['endpoint']);
+            return $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator)->hasEndpoint($factoryMapping['endpoint']);
         }
         return false;
     }
@@ -32,15 +33,20 @@ class RestControllerAbstractFactory implements AbstractFactoryInterface
         $factoryMapping = $this->getFactoryMapping($name);
 
         $endpointMap = $this->getEndpointMap($factoryMapping['manifestName'], $serviceLocator);
+        $endpoint = $endpointMap->getEndpoint($factoryMapping['endpoint']);
+
         $options = new JsonRestfulControllerOptions([
-            'end_point'        => $factoryMapping['endpoint'],
+            'end_point'        => $endpoint,
             'endpoint_map'     => $endpointMap,
-            'document_class'   => $endpointMap->getClass($factoryMapping['endpoint']),
+            'document_class'   => $endpoint->getClass(),
             'document_manager' => $serviceLocator->getServiceLocator()->get('config')['sds']['doctrineExtensions']['manifest'][$factoryMapping['manifestName']]['document_manager'],
             'manifest_name'    => $factoryMapping['manifestName'],
             'service_locator'  => $serviceLocator->getServiceLocator()->get('doctrineExtensions.' . $factoryMapping['manifestName'] . '.serviceManager')
         ]);
-        return new JsonRestfulController($options);
+        $instance = new JsonRestfulController($options);
+        $instance->setDoctrineSubscriber(new DoctrineSubscriber);
+
+        return $instance;
     }
 
     protected function getEndpointMap($manifestName, $serviceLocator){

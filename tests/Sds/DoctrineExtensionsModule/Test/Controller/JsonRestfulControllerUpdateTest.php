@@ -110,7 +110,7 @@ class JsonRestfulControllerUpdateTest extends AbstractHttpControllerTestCase{
 
         $this->getRequest()
             ->setMethod('PUT')
-            ->setContent('{"country": {"$ref": "country/germany"}}')
+            ->setContent('{"name": "gamewright", "country": {"$ref": "country/germany"}}')
             ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
 
         $this->dispatch('/rest/game/feed-the-kitty/publisher');
@@ -275,10 +275,6 @@ class JsonRestfulControllerUpdateTest extends AbstractHttpControllerTestCase{
         $this->assertEquals('oscar', $author->getName());
 
         $author = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->find('oscar');
-        $this->assertTrue(isset($author));
-
-        //check that the old author still exists - it was not deleted, just the ref with the game removed
-        $author = $this->documentManager->getRepository('Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author')->find('bill');
         $this->assertTrue(isset($author));
     }
 

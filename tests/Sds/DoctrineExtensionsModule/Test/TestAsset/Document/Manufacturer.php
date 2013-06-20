@@ -15,7 +15,8 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 class Manufacturer {
 
     /**
-     * @ODM\Id(strategy="NONE")
+     * @ODM\String
+     * @ODM\UniqueIndex
      */
     protected $name;
 

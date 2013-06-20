@@ -17,7 +17,8 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 class Publisher {
 
     /**
-     * @ODM\Id(strategy="NONE")
+     * @ODM\String
+     * @ODM\UniqueIndex
      */
     protected $name;
 

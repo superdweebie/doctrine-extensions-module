@@ -46,12 +46,12 @@ class JsonRestfulControllerGetListTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/author');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(200);
         $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
         $this->assertMatchedRouteName('rest.default');
-
-        $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertCount(4, $result);
         $this->assertEquals('Content-Range: 0-3/4', $this->getResponse()->getHeaders()->get('Content-Range')->toString());
@@ -68,12 +68,12 @@ class JsonRestfulControllerGetListTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/author?select(name)');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(200);
         $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
         $this->assertMatchedRouteName('rest.default');
-
-        $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertCount(4, $result);
         $this->assertFalse(isset($result[0]['country']));
@@ -326,12 +326,13 @@ class JsonRestfulControllerGetListTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/author');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(204);
         $this->assertControllerName('rest.default.author');
         $this->assertControllerClass('JsonRestfulController');
         $this->assertMatchedRouteName('rest.default');
 
-        $result = json_decode($this->getResponse()->getContent(), true);
         $this->assertFalse(isset($result));
     }
 }

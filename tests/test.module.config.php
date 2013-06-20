@@ -27,14 +27,39 @@ return [
                             'endpoint_map' => [
                                 'game' => [
                                     'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Game',
-                                    'cache' => [
+                                    'property' => 'name',
+                                    'cache_control' => [
                                         'no_cache' => true
+                                    ],
+                                    'embedded_lists' => [
+                                        'components' => [
+                                            'property' => 'name',
+                                            'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Component',
+                                            'embedded_lists' => [
+                                                'manufacturers' => [
+                                                    'property' => 'name',
+                                                    'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Manufacturer',
+                                                ]
+                                            ]
+                                        ]
                                     ]
                                 ],
-                                'author'  => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author',
-                                'country' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Country',
-                                'review'  => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Review',
-                                'user'    => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\User'
+                                'author'  => [
+                                    'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Author',
+                                    'property' => 'name'
+                                ],
+                                'country' => [
+                                    'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Country',
+                                    'property' => 'name'
+                                ],
+                                'review'  => [
+                                    'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\Review',
+                                    'property' => 'title'
+                                ],
+                                'user'    => [
+                                    'class' => 'Sds\DoctrineExtensionsModule\Test\TestAsset\Document\User',
+                                    'property' => 'username'
+                                ]
                             ]
                         ],
                         'extension.serializer' => [

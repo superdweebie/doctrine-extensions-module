@@ -22,7 +22,13 @@ class User {
     protected $id;
 
     /**
-     * @ODM\Field(type="string")
+     * @ODM\String
+     * @ODM\UniqueIndex
+     */
+    protected $username;
+
+    /**
+     * @ODM\String
      * @Sds\Serializer\Ignore
      */
     protected $password;
@@ -51,6 +57,14 @@ class User {
 
     public function setId($id) {
         $this->id = $id;
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function setUsername($username) {
+        $this->username = $username;
     }
 
     public function getPassword() {

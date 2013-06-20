@@ -135,6 +135,9 @@ return [
         ]
     ],
 
+    'controller_plugins' => [
+    ],
+
     'service_manager' => [
         'factories' => [
             'doctrine.cache.phpfileserialize' => 'Sds\DoctrineExtensionsModule\Service\PhpFileSerializeCacheFactory',

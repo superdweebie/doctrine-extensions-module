@@ -17,7 +17,8 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 class Component {
 
     /**
-     * @ODM\Id(strategy="NONE")
+     * @ODM\String
+     * @ODM\UniqueIndex
      */
     protected $name;
 

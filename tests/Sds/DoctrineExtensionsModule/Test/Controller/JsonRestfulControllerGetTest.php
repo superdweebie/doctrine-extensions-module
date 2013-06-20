@@ -67,10 +67,11 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/game/does-not-exist');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(404);
         $this->assertEquals('Content-Type: application/api-problem+json', $this->getResponse()->getHeaders()->get('Content-Type')->toString());
 
-        $result = json_decode($this->getResponse()->getContent(), true);
         $this->assertEquals('/exception/document-not-found', $result['describedBy']);
         $this->assertEquals('Document not found', $result['title']);
     }
@@ -86,10 +87,11 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/game/does-not-exist/publisher');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(404);
         $this->assertEquals('Content-Type: application/api-problem+json', $this->getResponse()->getHeaders()->get('Content-Type')->toString());
 
-        $result = json_decode($this->getResponse()->getContent(), true);
         $this->assertEquals('/exception/document-not-found', $result['describedBy']);
         $this->assertEquals('Document not found', $result['title']);
     }
@@ -143,12 +145,12 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/game/feed-the-kitty?select(publisher,type)');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+        
         $this->assertResponseStatusCode(200);
         $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
         $this->assertMatchedRouteName('rest.default');
-
-        $result = json_decode($this->getResponse()->getContent(), true);
 
         $this->assertFalse(isset($result['name']));
         $this->assertTrue(isset($result['publisher']));
@@ -210,13 +212,12 @@ class JsonRestfulControllerGetTest extends AbstractHttpControllerTestCase{
 
         $this->dispatch('/rest/game/feed-the-kitty/author');
 
+        $result = json_decode($this->getResponse()->getContent(), true);
+
         $this->assertResponseStatusCode(200);
         $this->assertControllerName('rest.default.game');
         $this->assertControllerClass('JsonRestfulController');
         $this->assertMatchedRouteName('rest.default');
-
-        $result = json_decode($this->getResponse()->getContent(), true);
-
         $this->assertEquals('james', $result['name']);
     }
 
