@@ -1,3 +1,5 @@
+Depreciated. See <a href="http://zoopcommerce.github.io/shard-module">shard-module</a>
+
 Sds doctrineExtensionsModule
 ============================
 
